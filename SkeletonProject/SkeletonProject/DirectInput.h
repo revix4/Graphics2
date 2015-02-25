@@ -10,6 +10,7 @@
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
+#include <vector>
 
 class DirectInput
 {
@@ -19,6 +20,7 @@ public:
 
 	void poll();
 	bool keyDown(char key);
+	bool keyPressed(char key);
 	bool mouseButtonDown(int button);
 	float mouseDX();
 	float mouseDY();
@@ -33,10 +35,14 @@ private:
 	IDirectInput8*       mDInput;
 
 	IDirectInputDevice8* mKeyboard;
-	char                 mKeyboardState[256]; 
+	char                 mKeyboardState[256];
+
+	std::vector<char>	 mKeysDown;
 
 	IDirectInputDevice8* mMouse;
 	DIMOUSESTATE2        mMouseState;
+
+	bool isKeyDown(char key);
 };
 extern DirectInput* gDInput;
 

@@ -13,6 +13,8 @@ DirectInput::DirectInput(DWORD keyboardCoopFlags, DWORD mouseCoopFlags)
 	ZeroMemory(mKeyboardState, sizeof(mKeyboardState));
 	ZeroMemory(&mMouseState, sizeof(mMouseState));
 
+	mKeysDown = std::vector<char>();
+
 	HR(DirectInput8Create(gd3dApp->getAppInst(), DIRECTINPUT_VERSION, 
 		IID_IDirectInput8, (void**)&mDInput, 0));
 
@@ -59,11 +61,46 @@ void DirectInput::poll()
 		// Try to acquire for next time we poll.
 		hr = mMouse->Acquire(); 
 	}
+
+	std::vector<char>::iterator iter;
+	for (iter = mKeysDown.begin(); iter != mKeysDown.end(); iter++)
+	{
+		if (! ((mKeyboardState[*iter] & 0x80) != 0) )
+		{
+			mKeysDown.erase(iter);
+			break;
+		}
+	}
 }
 
 bool DirectInput::keyDown(char key)
 {
 	return (mKeyboardState[key] & 0x80) != 0;
+}
+
+bool DirectInput::keyPressed(char key)
+{
+	if (((mKeyboardState[key] & 0x80) != 0) && !isKeyDown(key))
+	{
+		mKeysDown.push_back(key);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool DirectInput::isKeyDown(char key)
+{
+	for each (char c in mKeysDown)
+	{
+		if (c == key)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 bool DirectInput::mouseButtonDown(int button)

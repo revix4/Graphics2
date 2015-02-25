@@ -82,6 +82,9 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_Objects.push_back(new Cone(5,10,25));
 	m_Objects[2]->Create(gd3dDevice);
 
+	m_Objects.push_back(new BaseObject3D());
+	m_Objects[3]->Create(gd3dDevice);
+
 	mWireFrameOn = false;
 	mTextureOn = true;
 	mCurrentObject = 0;
@@ -148,16 +151,19 @@ void SkeletonClass::updateScene(float dt)
 	if (gDInput->mouseButtonDown(1))
 		mCameraRadius += 25.0f * dt;
 
-	if (gDInput->keyDown(DIK_W))
+	if (gDInput->keyPressed(DIK_W))
 		mWireFrameOn = !mWireFrameOn;
 	if (gDInput->keyDown(DIK_T))
 		mTextureOn = !mTextureOn;
-	if (gDInput->keyDown(DIK_O))
+	if (gDInput->keyPressed(DIK_O))
 		mCurrentObject++;
 	if (gDInput->keyDown(DIK_S))
 		mSpecularOn = !mSpecularOn;
 	if (gDInput->keyDown(DIK_D))
 		mDiffuseOn = !mDiffuseOn;
+
+	if (mCurrentObject == m_Objects.size())
+		mCurrentObject = 0;
 
 	//if we go above 360 or below 0, wrap around
 	if (mCameraRotationX > 2 * D3DX_PI)
@@ -205,7 +211,7 @@ void SkeletonClass::drawScene()
 	}
 
     // Render all the objects
-    m_Objects[0]->Render( gd3dDevice, mView, mProj );
+	m_Objects[mCurrentObject % m_Objects.size() ]->Render(gd3dDevice, mView, mProj);
 
     // display the render statistics
     GfxStats::GetInstance()->display();
