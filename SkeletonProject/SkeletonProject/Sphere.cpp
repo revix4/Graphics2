@@ -69,6 +69,7 @@ void Sphere::Update()
 void Sphere::buildVertexBuffer(IDirect3DDevice9* gd3dDevice)
 {
 	int ringCount = m_stackCount + 1;
+	float dPhi = PI / m_stackCount;
 	float dTheta = (float)(2.0f * PI / m_sliceCount);
 	int vertexCount = 0;
 	// Obtain a pointer to a new vertex buffer.
@@ -83,7 +84,7 @@ void Sphere::buildVertexBuffer(IDirect3DDevice9* gd3dDevice)
 	float verticleAngle = 0;
 	//compute vertices for wall
 
-	v[0] = VertexPos(0, m_radius, 0, color);
+	v[0] = VertexPos(0, m_radius, 0, color, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f);
 	vertexCount++;
 
 	for (int i = 1; i < m_stackCount; i++)
@@ -98,13 +99,20 @@ void Sphere::buildVertexBuffer(IDirect3DDevice9* gd3dDevice)
 			float c = cosf(j*dTheta);
 			float s = sinf(j*dTheta);
 
-			v[vertexCount] = VertexPos(r*c, y, r*s, color);
+			float U = (j*dTheta) / 2 * PI;
+			float V = (i*dPhi) / PI;
+
+			D3DXVECTOR3 p(r*c, y, r*s);
+			D3DXVECTOR3 *n = new D3DXVECTOR3();
+			D3DXVec3Normalize(n, &p);
+
+			v[vertexCount] = VertexPos(r*c, y, r*s, color, U, V, n->x, n->y, n->z);
 			vertexCount++;
 		}
 		verticleAngle += (float)(2 * PI / ringCount);
 	}
 
-	v[vertexCount] = VertexPos(0, -m_radius, 0, color);
+	v[vertexCount] = VertexPos(0, -m_radius, 0, color, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f);
 	vertexCount++;
 
 	HR(m_VertexBuffer->Unlock());

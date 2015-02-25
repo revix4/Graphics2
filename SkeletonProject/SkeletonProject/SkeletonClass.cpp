@@ -75,15 +75,12 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
     // repleace or add to the following object creation
 	m_Objects.push_back(new Cylinder(5, 5, 10, 25, 25));
     m_Objects[0]->Create( gd3dDevice );
-	/*m_Objects[0]->setWorldLocation(transformSphere);
 
-	m_Objects.push_back(new Cylinder(5,5,10,25,25));
+	m_Objects.push_back(new Sphere(5, 25, 25));
 	m_Objects[1]->Create(gd3dDevice);
-	m_Objects[1]->setWorldLocation(transformCylinder);
 
 	m_Objects.push_back(new Cone(5,10,25));
 	m_Objects[2]->Create(gd3dDevice);
-	m_Objects[2]->setWorldLocation(transformCone);*/
 
 	mWireFrameOn = false;
 	mTextureOn = true;
@@ -208,10 +205,7 @@ void SkeletonClass::drawScene()
 	}
 
     // Render all the objects
-    for ( unsigned int obj=0 ; obj<m_Objects.size() ; obj++ )
-    {
-        m_Objects[obj]->Render( gd3dDevice, mView, mProj );
-    }
+    m_Objects[0]->Render( gd3dDevice, mView, mProj );
 
     // display the render statistics
     GfxStats::GetInstance()->display();

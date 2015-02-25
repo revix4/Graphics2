@@ -108,7 +108,11 @@ void Cylinder::buildVertexBuffer(IDirect3DDevice9* gd3dDevice)
 			float dr = m_bottomRadius - m_topRadius;
 			D3DXVECTOR3 b(dr*c, -m_height, dr*s);
 
-			D3DXVECTOR3 *n = D3DXVec3Normalize(nullptr, D3DXVec3Cross(nullptr, &t, &b));
+			D3DXVECTOR3 *cross = new D3DXVECTOR3();
+			D3DXVec3Cross(cross, &t, &b);
+
+			D3DXVECTOR3 *n = new D3DXVECTOR3();
+			D3DXVec3Normalize(n, cross);
 
 			v[vertexCount] = VertexPos(r*c, y, r*s, color, (float)j/m_sliceCount, 1.0f - (float)i/m_stackCount, n->x, n->y, n->z);
 			vertexCount++;

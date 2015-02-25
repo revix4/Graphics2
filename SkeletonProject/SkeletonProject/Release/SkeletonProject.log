@@ -1,45 +1,25 @@
-﻿Build started 2/24/2015 6:49:49 PM.
-     1>Project "C:\Users\james_000\Documents\Graphics2\SkeletonProject\SkeletonProject\SkeletonProject.vcxproj" on node 2 (Build target(s)).
+﻿Build started 2/24/2015 8:46:02 PM.
+     1>Project "C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\SkeletonProject.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _MBCS /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt 3DClasses\BaseObject3D.cpp Cylinder.cpp Sphere.cpp
-         BaseObject3D.cpp
-     1>3DClasses\BaseObject3D.cpp(84): error C2665: 'VertexPos::VertexPos' : none of the 4 overloads could convert all the argument types
-                 c:\users\james_000\documents\graphics2\skeletonproject\skeletonproject\3dclasses\Vertex.h(24): could be 'VertexPos::VertexPos(const D3DXVECTOR3 &,const D3DCOLOR &,const D3DXVECTOR2 &,const D3DXVECTOR3 &)'
-                 while trying to match the argument list '(float, float, float, D3DCOLOR)'
-     1>3DClasses\BaseObject3D.cpp(85): error C2665: 'VertexPos::VertexPos' : none of the 4 overloads could convert all the argument types
-                 c:\users\james_000\documents\graphics2\skeletonproject\skeletonproject\3dclasses\Vertex.h(24): could be 'VertexPos::VertexPos(const D3DXVECTOR3 &,const D3DCOLOR &,const D3DXVECTOR2 &,const D3DXVECTOR3 &)'
-                 while trying to match the argument list '(float, float, float, D3DCOLOR)'
-     1>3DClasses\BaseObject3D.cpp(86): error C2665: 'VertexPos::VertexPos' : none of the 4 overloads could convert all the argument types
-                 c:\users\james_000\documents\graphics2\skeletonproject\skeletonproject\3dclasses\Vertex.h(24): could be 'VertexPos::VertexPos(const D3DXVECTOR3 &,const D3DCOLOR &,const D3DXVECTOR2 &,const D3DXVECTOR3 &)'
-                 while trying to match the argument list '(float, float, float, D3DCOLOR)'
-     1>3DClasses\BaseObject3D.cpp(87): error C2665: 'VertexPos::VertexPos' : none of the 4 overloads could convert all the argument types
-                 c:\users\james_000\documents\graphics2\skeletonproject\skeletonproject\3dclasses\Vertex.h(24): could be 'VertexPos::VertexPos(const D3DXVECTOR3 &,const D3DCOLOR &,const D3DXVECTOR2 &,const D3DXVECTOR3 &)'
-                 while trying to match the argument list '(float, float, float, D3DCOLOR)'
-     1>3DClasses\BaseObject3D.cpp(88): error C2665: 'VertexPos::VertexPos' : none of the 4 overloads could convert all the argument types
-                 c:\users\james_000\documents\graphics2\skeletonproject\skeletonproject\3dclasses\Vertex.h(24): could be 'VertexPos::VertexPos(const D3DXVECTOR3 &,const D3DCOLOR &,const D3DXVECTOR2 &,const D3DXVECTOR3 &)'
-                 while trying to match the argument list '(float, float, float, D3DCOLOR)'
-     1>3DClasses\BaseObject3D.cpp(89): error C2665: 'VertexPos::VertexPos' : none of the 4 overloads could convert all the argument types
-                 c:\users\james_000\documents\graphics2\skeletonproject\skeletonproject\3dclasses\Vertex.h(24): could be 'VertexPos::VertexPos(const D3DXVECTOR3 &,const D3DCOLOR &,const D3DXVECTOR2 &,const D3DXVECTOR3 &)'
-                 while trying to match the argument list '(float, float, float, D3DCOLOR)'
-     1>3DClasses\BaseObject3D.cpp(90): error C2665: 'VertexPos::VertexPos' : none of the 4 overloads could convert all the argument types
-                 c:\users\james_000\documents\graphics2\skeletonproject\skeletonproject\3dclasses\Vertex.h(24): could be 'VertexPos::VertexPos(const D3DXVECTOR3 &,const D3DCOLOR &,const D3DXVECTOR2 &,const D3DXVECTOR3 &)'
-                 while trying to match the argument list '(float, float, float, D3DCOLOR)'
-     1>3DClasses\BaseObject3D.cpp(91): error C2665: 'VertexPos::VertexPos' : none of the 4 overloads could convert all the argument types
-                 c:\users\james_000\documents\graphics2\skeletonproject\skeletonproject\3dclasses\Vertex.h(24): could be 'VertexPos::VertexPos(const D3DXVECTOR3 &,const D3DCOLOR &,const D3DXVECTOR2 &,const D3DXVECTOR3 &)'
-                 while trying to match the argument list '(float, float, float, D3DCOLOR)'
-         Cylinder.cpp
-         Sphere.cpp
-     1>Sphere.cpp(86): error C2065: 'm_r' : undeclared identifier
-     1>Sphere.cpp(86): error C2065: 'm_g' : undeclared identifier
-     1>Sphere.cpp(86): error C2065: 'm_b' : undeclared identifier
-     1>Sphere.cpp(101): error C2065: 'm_r' : undeclared identifier
-     1>Sphere.cpp(101): error C2065: 'm_g' : undeclared identifier
-     1>Sphere.cpp(101): error C2065: 'm_b' : undeclared identifier
-     1>Sphere.cpp(107): error C2065: 'm_r' : undeclared identifier
-     1>Sphere.cpp(107): error C2065: 'm_g' : undeclared identifier
-     1>Sphere.cpp(107): error C2065: 'm_b' : undeclared identifier
-     1>Done Building Project "C:\Users\james_000\Documents\Graphics2\SkeletonProject\SkeletonProject\SkeletonProject.vcxproj" (Build target(s)) -- FAILED.
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _MBCS /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt SkeletonClass.cpp
+         SkeletonClass.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\Release\SkeletonProject.exe" /INCREMENTAL /NOLOGO d3d9.lib d3dx9d.lib dxguid.lib DxErr.lib dinput8.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\Release\SkeletonProject.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\Release\SkeletonProject.lib" /MACHINE:X86 /SAFESEH Release\BaseObject3D.obj
+         Release\Vertex.obj
+         Release\BaseMaterial.obj
+         Release\Cone.obj
+         Release\Cylinder.obj
+         Release\d3dApp.obj
+         Release\DirectInput.obj
+         Release\GfxStats.obj
+         Release\SkeletonClass.obj
+         Release\Sphere.obj
+     1>LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
+         Generating code
+         Finished generating code
+         SkeletonProject.vcxproj -> C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\Release\SkeletonProject.exe
+     1>Done Building Project "C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\SkeletonProject.vcxproj" (Build target(s)).
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:01.39
+Time Elapsed 00:00:01.14

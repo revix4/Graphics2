@@ -81,14 +81,14 @@ void BaseObject3D::buildVertexBuffer( IDirect3DDevice9* gd3dDevice )
 	VertexPos* v = 0;
 	HR(m_VertexBuffer->Lock(0, 0, (void**)&v, 0));
 
-	v[0] = VertexPos(-1.0f, -1.0f, -1.0f, color);
-	v[1] = VertexPos(-1.0f, 1.0f, -1.0f, color);
-	v[2] = VertexPos(1.0f, 1.0f, -1.0f, color);
-	v[3] = VertexPos(1.0f, -1.0f, -1.0f, color);
-	v[4] = VertexPos(-1.0f, -1.0f, 1.0f, color);
-	v[5] = VertexPos(-1.0f, 1.0f, 1.0f, color);
-	v[6] = VertexPos(1.0f, 1.0f, 1.0f, color);
-	v[7] = VertexPos(1.0f, -1.0f, 1.0f, color);
+	v[0] = VertexPos(-1.0f, -1.0f, -1.0f, color, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f);
+	v[1] = VertexPos(-1.0f, 1.0f, -1.0f, color, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f);
+	v[2] = VertexPos(1.0f, 1.0f, -1.0f, color, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f);
+	v[3] = VertexPos(1.0f, -1.0f, -1.0f, color, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f);
+	v[4] = VertexPos(-1.0f, -1.0f, 1.0f, color, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f);
+	v[5] = VertexPos(-1.0f, 1.0f, 1.0f, color, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
+	v[6] = VertexPos(1.0f, 1.0f, 1.0f, color, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	v[7] = VertexPos(1.0f, -1.0f, 1.0f, color, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	HR(m_VertexBuffer->Unlock());
 }
