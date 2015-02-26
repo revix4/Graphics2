@@ -29,6 +29,9 @@ protected:
 	IDirect3DIndexBuffer9*      m_IndexBuffer;
 
 	D3DCOLOR color;
+
+	ID3DXEffect *shader;
+
 protected:
     // Replace the code in the following methods
     virtual void buildVertexBuffer( IDirect3DDevice9* gd3dDevice );

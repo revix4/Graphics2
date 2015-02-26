@@ -40,6 +40,8 @@ Cylinder::~Cylinder()
 //-----------------------------------------------------------------------------
 void Cylinder::Create(IDirect3DDevice9* gd3dDevice)
 {
+	D3DXCreateEffectFromFileA(gd3dDevice, "Effect.fx", 0, 0, 0, 0, &shader, 0);
+
 	buildVertexBuffer(gd3dDevice);
 	buildIndexBuffer(gd3dDevice);
 }
@@ -51,18 +53,33 @@ void Cylinder::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX
 	GfxStats::GetInstance()->addVertices(m_verticeCount);
 	GfxStats::GetInstance()->addTriangles(m_triangleCount);//how many triangles are there?
 
-	// Set the buffers and format
-	HR(gd3dDevice->SetStreamSource(0, m_VertexBuffer, 0, sizeof(VertexPos)));
-	HR(gd3dDevice->SetIndices(m_IndexBuffer));
-	HR(gd3dDevice->SetVertexDeclaration(VertexPos::Decl));
+	HR(shader->SetMatrix("matViewProjection", &(m_World*view*projection)));
 
-	// Set matrices and model relevant render date
-	HR(gd3dDevice->SetTransform(D3DTS_WORLD, &m_World));
-	HR(gd3dDevice->SetTransform(D3DTS_VIEW, &view));
-	HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &projection));
+	unsigned int numPass = 0;
+	HR(shader->Begin(&numPass, 0));
 
-	// Send to render
-	HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_verticeCount, 0, m_triangleCount));
+	for (unsigned int i = 0; i < numPass; i++)
+	{
+		HR(shader->BeginPass(i));
+
+		// Set the buffers and format
+		HR(gd3dDevice->SetStreamSource(0, m_VertexBuffer, 0, sizeof(VertexPos)));
+		HR(gd3dDevice->SetIndices(m_IndexBuffer));
+		HR(gd3dDevice->SetVertexDeclaration(VertexPos::Decl));
+
+		// Set matrices and model relevant render date
+		HR(gd3dDevice->SetTransform(D3DTS_WORLD, &m_World));
+		HR(gd3dDevice->SetTransform(D3DTS_VIEW, &view));
+		HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &projection));
+
+		HR(shader->CommitChanges());
+
+		// Send to render
+		HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_verticeCount, 0, m_triangleCount));
+
+		HR(shader->EndPass());
+	}
+	HR(shader->End());
 }
 
 //-----------------------------------------------------------------------------

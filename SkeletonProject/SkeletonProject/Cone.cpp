@@ -25,6 +25,8 @@ Cone::~Cone()
 //-----------------------------------------------------------------------------
 void Cone::Create(IDirect3DDevice9* gd3dDevice)
 {
+	D3DXCreateEffectFromFileA(gd3dDevice, "Effect.fx", 0, 0, 0, 0, &shader, 0);
+
 	buildVertexBuffer(gd3dDevice);
 	buildIndexBuffer(gd3dDevice);
 }

@@ -18,6 +18,8 @@ BaseObject3D::BaseObject3D(void)
 	color = D3DCOLOR(D3DCOLOR_XRGB(0, 0, 0));
 
     D3DXMatrixIdentity(&m_World);
+
+	shader = nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -30,6 +32,8 @@ BaseObject3D::~BaseObject3D(void)
 //-----------------------------------------------------------------------------
 void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 {
+	D3DXCreateEffectFromFileA(gd3dDevice, "Effect.fx", 0, 0, 0, 0, &shader, 0);
+
     buildVertexBuffer( gd3dDevice );
     buildIndexBuffer( gd3dDevice );
 }
@@ -42,18 +46,35 @@ void BaseObject3D::Render( IDirect3DDevice9* gd3dDevice,
     GfxStats::GetInstance()->addVertices(8);
     GfxStats::GetInstance()->addTriangles(12);
 
-    // Set the buffers and format
-    HR(gd3dDevice->SetStreamSource(0, m_VertexBuffer, 0, sizeof(VertexPos)));
-	HR(gd3dDevice->SetIndices(m_IndexBuffer));
-	HR(gd3dDevice->SetVertexDeclaration(VertexPos::Decl));
+	HR(shader->SetMatrix("matViewProjection", &(m_World*view*projection)));
 
-    // Set matrices and model relevant render date
-	HR(gd3dDevice->SetTransform(D3DTS_WORLD, &m_World));
-	HR(gd3dDevice->SetTransform(D3DTS_VIEW, &view));
-	HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &projection));	
-    
-    // Send to render
-    HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12));
+	unsigned int numPass = 0;
+	HR(shader->Begin(&numPass, 0));
+
+	for (unsigned int i = 0; i < numPass; i++)
+	{
+		HR(shader->BeginPass(i));
+
+		// Set the buffers and format
+		HR(gd3dDevice->SetStreamSource(0, m_VertexBuffer, 0, sizeof(VertexPos)));
+		HR(gd3dDevice->SetIndices(m_IndexBuffer));
+		HR(gd3dDevice->SetVertexDeclaration(VertexPos::Decl));
+
+		// Set matrices and model relevant render date
+		HR(gd3dDevice->SetTransform(D3DTS_WORLD, &m_World));
+		HR(gd3dDevice->SetTransform(D3DTS_VIEW, &view));
+		HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &projection));
+
+		HR(shader->CommitChanges());
+
+		// Send to render
+		HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12));
+
+		
+
+		HR(shader->EndPass());
+	}
+	HR(shader->End());
 }
 
 void BaseObject3D::setWorldLocation(D3DXMATRIX transform)

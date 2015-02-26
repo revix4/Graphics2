@@ -45,21 +45,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWORD requestedVP)
 : D3DApp(hInstance, winCaption, devType, requestedVP)
 {
-	D3DXMATRIX transformSphere = D3DXMATRIX(1, 0, 0, 10,
-											0, 1, 0, 0,
-											0, 0, 1, 0,
-											0, 0, 0, 1);
-
-	D3DXMATRIX transformCylinder = D3DXMATRIX(	1, 0, 0, 0,
-												0, 1, 0, 0,
-												0, 0, 1, 0,
-												0, 0, 0, 1);
-
-	D3DXMATRIX transformCone = D3DXMATRIX(	1, 0, 0, -10,
-											0, 1, 0, 0,
-											0, 0, 1, 0,
-											0, 0, 0, 1);
-
 	mUp = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
 	if(!checkDeviceCaps())
@@ -109,6 +94,20 @@ SkeletonClass::~SkeletonClass()
 
 bool SkeletonClass::checkDeviceCaps()
 {
+	D3DCAPS9 caps;
+	HR(gd3dDevice->GetDeviceCaps(&caps));
+
+	// Check for vertex shader version 2.0 support.
+	if (caps.VertexShaderVersion < D3DVS_VERSION(2, 0))
+	{
+		return false;
+	}
+
+	// Check for pixel shader version 2.0 support.
+	if (caps.PixelShaderVersion < D3DPS_VERSION(2, 0))
+	{
+		return false;
+	}
 	return true;
 }
 
@@ -200,7 +199,7 @@ void SkeletonClass::drawScene()
 
 	HR(gd3dDevice->BeginScene());
 
-    // Set render statws for the entire scene here:
+	// Set render statws for the entire scene here:
 	if (mWireFrameOn)
 	{
 		HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME));
@@ -210,11 +209,11 @@ void SkeletonClass::drawScene()
 		HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID));
 	}
 
-    // Render all the objects
-	m_Objects[mCurrentObject % m_Objects.size() ]->Render(gd3dDevice, mView, mProj);
+	// Render all the objects
+	m_Objects[mCurrentObject % m_Objects.size()]->Render(gd3dDevice, mView, mProj);
 
-    // display the render statistics
-    GfxStats::GetInstance()->display();
+	// display the render statistics
+	GfxStats::GetInstance()->display();
 
 	HR(gd3dDevice->EndScene());
 
