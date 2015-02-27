@@ -30,6 +30,8 @@ protected:
 
 	D3DCOLOR color;
 
+	ID3DXMesh *mesh;
+
 	ID3DXEffect *shader;
 
 protected:

@@ -19,14 +19,17 @@ BaseObject3D::BaseObject3D(void)
 
     D3DXMatrixIdentity(&m_World);
 
+	mesh = nullptr;
 	shader = nullptr;
 }
 
 //-----------------------------------------------------------------------------
 BaseObject3D::~BaseObject3D(void)
 {
-    ReleaseCOM(m_VertexBuffer);
-	ReleaseCOM(m_IndexBuffer);
+    //ReleaseCOM(m_VertexBuffer);
+	//ReleaseCOM(m_IndexBuffer);
+
+	ReleaseCOM(mesh);
 }
 
 //-----------------------------------------------------------------------------
@@ -34,8 +37,10 @@ void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 {
 	D3DXCreateEffectFromFileA(gd3dDevice, "Effect.fx", 0, 0, 0, 0, &shader, 0);
 
-    buildVertexBuffer( gd3dDevice );
-    buildIndexBuffer( gd3dDevice );
+	D3DXCreateBox(gd3dDevice, 1, 1, 1, &mesh, 0);
+
+    //buildVertexBuffer( gd3dDevice );
+    //buildIndexBuffer( gd3dDevice );
 }
 
 //-----------------------------------------------------------------------------
@@ -56,9 +61,9 @@ void BaseObject3D::Render( IDirect3DDevice9* gd3dDevice,
 		HR(shader->BeginPass(i));
 
 		// Set the buffers and format
-		HR(gd3dDevice->SetStreamSource(0, m_VertexBuffer, 0, sizeof(VertexPos)));
-		HR(gd3dDevice->SetIndices(m_IndexBuffer));
-		HR(gd3dDevice->SetVertexDeclaration(VertexPos::Decl));
+		//HR(gd3dDevice->SetStreamSource(0, m_VertexBuffer, 0, sizeof(VertexPos)));
+		//HR(gd3dDevice->SetIndices(m_IndexBuffer));
+		//HR(gd3dDevice->SetVertexDeclaration(VertexPos::Decl));
 
 		// Set matrices and model relevant render date
 		HR(gd3dDevice->SetTransform(D3DTS_WORLD, &m_World));
@@ -68,8 +73,8 @@ void BaseObject3D::Render( IDirect3DDevice9* gd3dDevice,
 		HR(shader->CommitChanges());
 
 		// Send to render
-		HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12));
-
+		//HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12));
+		HR(mesh->DrawSubset(0));
 		
 
 		HR(shader->EndPass());
