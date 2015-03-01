@@ -12,6 +12,7 @@
 #pragma once
 //=============================================================================
 #include <d3dx9.h>
+#include "../BaseMaterial.h"
 
 #include "../d3dUtil.h"
 //=============================================================================
@@ -33,6 +34,8 @@ protected:
 	ID3DXMesh *mesh;
 
 	ID3DXEffect *shader;
+
+	BaseMaterial *m_material;
 
 protected:
     // Replace the code in the following methods

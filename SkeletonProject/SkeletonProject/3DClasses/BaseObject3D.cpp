@@ -16,6 +16,7 @@ BaseObject3D::BaseObject3D(void)
     m_IndexBuffer = NULL;
 
 	color = D3DCOLOR(D3DCOLOR_XRGB(0, 0, 0));
+	m_material = new BaseMaterial();
 
     D3DXMatrixIdentity(&m_World);
 
@@ -36,6 +37,8 @@ BaseObject3D::~BaseObject3D(void)
 void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 {
 	D3DXCreateEffectFromFileA(gd3dDevice, "Effect.fx", 0, 0, 0, 0, &shader, 0);
+	m_material->ConnectToEffect(shader);
+	m_material->buildFX();
 
 	D3DXCreateBox(gd3dDevice, 1, 1, 1, &mesh, 0);
 
@@ -52,6 +55,7 @@ void BaseObject3D::Render( IDirect3DDevice9* gd3dDevice,
     GfxStats::GetInstance()->addTriangles(12);
 
 	HR(shader->SetMatrix("matViewProjection", &(m_World*view*projection)));
+	//HR(shader->SetTexture, m_material, mTex0));
 
 	unsigned int numPass = 0;
 	HR(shader->Begin(&numPass, 0));

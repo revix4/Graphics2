@@ -24,6 +24,14 @@ string Effect_Group_1_Effect1_Pass_0_Model : ModelData = "..\\..\\..\\..\\..\\..
 
 float4x4 matViewProjection : ViewProjection;
 
+uniform extern float4 g_worldMat;
+uniform extern float4 g_viewProjMat;
+uniform extern float4 g_lightPos;
+uniform extern float4 g_viewerPos;
+uniform extern float4 g_diffuseCol;
+uniform extern float4 g_specularCol;
+uniform extern float4 g_shine;
+
 struct VS_INPUT 
 {
    float3 Position : POSITION0;
@@ -35,6 +43,7 @@ struct VS_INPUT
 struct VS_OUTPUT 
 {
    float4 Position : POSITION0;
+   float4 Color    : COLOR0;
    
 };
 
@@ -43,6 +52,7 @@ VS_OUTPUT Effect_Group_1_Effect1_Pass_0_Vertex_Shader_vs_main( VS_INPUT Input )
    VS_OUTPUT Output = (VS_OUTPUT)0;
 
    Output.Position = mul( float4(Input.Position, 1.0f), matViewProjection );
+   Output.Color = Input.Color;
    
    return( Output );
    
@@ -51,10 +61,10 @@ VS_OUTPUT Effect_Group_1_Effect1_Pass_0_Vertex_Shader_vs_main( VS_INPUT Input )
 
 
 
-float4 Effect_Group_1_Effect1_Pass_0_Pixel_Shader_ps_main() : COLOR0
+float4 Effect_Group_1_Effect1_Pass_0_Pixel_Shader_ps_main( VS_OUTPUT Output) : COLOR0
 {   
-   return( float4( 1.0f, 1.0f, 0.0f, 1.0f ) );
-   
+   return( Output.Color );
+   //return( float4( 0.0f, 1.0f, 0.0f, 1.0f ) );
 }
 
 
