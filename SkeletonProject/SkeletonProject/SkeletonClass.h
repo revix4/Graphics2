@@ -59,6 +59,7 @@ private:
 	D3DXMATRIX mProj;
 
 	D3DXVECTOR3 mUp;
+	D3DXVECTOR3 mLightPos;
 
     std::vector<BaseObject3D*>      m_Objects;
 };

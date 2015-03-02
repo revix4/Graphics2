@@ -37,8 +37,8 @@ public:
 	~Sphere();
 
 	virtual void Create(IDirect3DDevice9* gd3dDevice);
-	virtual void Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection);
-	virtual void Update();
+	virtual void Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn);
+	virtual void Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos);
 };
 
 #endif

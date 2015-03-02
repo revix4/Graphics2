@@ -72,6 +72,8 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_Objects.push_back(new BaseObject3D());
 	m_Objects[3]->Create(gd3dDevice);
 
+	mLightPos = D3DXVECTOR3(0, 100, 0);
+
 	mWireFrameOn = false;
 	mTextureOn = true;
 	mCurrentObject = 0;
@@ -152,13 +154,13 @@ void SkeletonClass::updateScene(float dt)
 
 	if (gDInput->keyPressed(DIK_W))
 		mWireFrameOn = !mWireFrameOn;
-	if (gDInput->keyDown(DIK_T))
+	if (gDInput->keyPressed(DIK_T))
 		mTextureOn = !mTextureOn;
 	if (gDInput->keyPressed(DIK_O))
 		mCurrentObject++;
-	if (gDInput->keyDown(DIK_S))
+	if (gDInput->keyPressed(DIK_S))
 		mSpecularOn = !mSpecularOn;
-	if (gDInput->keyDown(DIK_D))
+	if (gDInput->keyPressed(DIK_D))
 		mDiffuseOn = !mDiffuseOn;
 
 	if (mCurrentObject == m_Objects.size())
@@ -189,6 +191,9 @@ void SkeletonClass::updateScene(float dt)
 	// change every frame based on input, so we need to rebuild the
 	// view matrix every frame with the latest changes.
 	buildViewMtx();
+
+	
+	m_Objects[mCurrentObject % m_Objects.size()]->Update(mLightPos, D3DXVECTOR3(mView._41, mView._42, mView._43));
 }
 
 
@@ -210,7 +215,7 @@ void SkeletonClass::drawScene()
 	}
 
 	// Render all the objects
-	m_Objects[mCurrentObject % m_Objects.size()]->Render(gd3dDevice, mView, mProj);
+	m_Objects[mCurrentObject % m_Objects.size()]->Render(gd3dDevice, mView, mProj, mSpecularOn, mDiffuseOn, mTextureOn);
 
 	// display the render statistics
 	GfxStats::GetInstance()->display();

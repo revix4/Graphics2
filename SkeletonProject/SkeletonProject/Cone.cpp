@@ -29,15 +29,15 @@ void Cone::Create(IDirect3DDevice9* gd3dDevice)
 }
 
 //-----------------------------------------------------------------------------
-void Cone::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection)
+void Cone::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn)
 {
-	Cylinder::Render(gd3dDevice, view, projection);
+	Cylinder::Render(gd3dDevice, view, projection, specularOn, diffuseOn, textureOn);
 }
 
 //-----------------------------------------------------------------------------
-void Cone::Update()
+void Cone::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos)
 {
-
+	m_material->Update(lightPos, viewPos);
 }
 
 //-----------------------------------------------------------------------------

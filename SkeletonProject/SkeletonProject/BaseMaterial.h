@@ -38,8 +38,8 @@ protected:
     D3DXHANDLE          m_ShininessHandle;   
 
 	//---------- Texturing Data ------------
-	IDirect3DTexture9* m_texture;
-	D3DXHANDLE					m_materialHandle;
+	IDirect3DTexture9*  m_texture;
+	D3DXHANDLE		    m_materialHandle;
 
 public:
     BaseMaterial(void);
@@ -49,6 +49,7 @@ public:
     void Render( D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat );
 	void setTexture(IDirect3DDevice9* gd3dDevice, LPCSTR filename);
 	void buildFX();
+	void Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos);
 };
 //=============================================================================
 

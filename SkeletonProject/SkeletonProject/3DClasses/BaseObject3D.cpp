@@ -41,7 +41,7 @@ void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 	m_material->setTexture(gd3dDevice, "marble.bmp");
 	//D3DXCreateTextureFromFile(gd3dDevice, "marble.bmp", &m_texture);
 
-	D3DXCreateEffectFromFileA(gd3dDevice, "Textured.fx", 0, 0, 0, 0, &shader, 0);
+	D3DXCreateEffectFromFileA(gd3dDevice, "TexturedGauroud.fx", 0, 0, 0, 0, &shader, 0);
 	m_material->ConnectToEffect(shader);
 	m_material->buildFX();
 
@@ -55,13 +55,16 @@ void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 
 //-----------------------------------------------------------------------------
 void BaseObject3D::Render( IDirect3DDevice9* gd3dDevice,
-    D3DXMATRIX& view, D3DXMATRIX& projection )
+    D3DXMATRIX& view, D3DXMATRIX& projection , boolean specularOn, boolean diffuseOn, boolean textureOn)
 {
     // Update the statistics singlton class
     GfxStats::GetInstance()->addVertices(8);
     GfxStats::GetInstance()->addTriangles(12);
 
 	HR(shader->SetMatrix("matViewProjection", &(m_World*view*projection)));
+	HR(shader->SetBool("spec_On", specularOn));
+	HR(shader->SetBool("diff_On", diffuseOn));
+	HR(shader->SetBool("tex_On", textureOn));
 
 	unsigned int numPass = 0;
 	HR(shader->Begin(&numPass, 0));
@@ -99,9 +102,9 @@ void BaseObject3D::setWorldLocation(D3DXMATRIX transform)
 }
 
 //-----------------------------------------------------------------------------
-void BaseObject3D::Update()
+void BaseObject3D::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos)
 {
-
+	m_material->Update(lightPos, viewPos);
 }
 
 //-----------------------------------------------------------------------------
