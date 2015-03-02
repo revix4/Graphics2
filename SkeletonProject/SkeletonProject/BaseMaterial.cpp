@@ -49,12 +49,12 @@ void BaseMaterial::buildFX()
 {
 	m_WorldMatHandle = m_Effect->GetParameterByName(0, "matView");
 	m_ViewProjectionMatHandle = m_Effect->GetParameterByName(0, "matViewProjection");
-	m_LightPosWHandle = m_Effect->GetParameterByName(0, "fvLightPosition");
-	m_ViewerPosWHandle = m_Effect->GetParameterByName(0, "fvEyePosition");
-	m_DiffuseColHandle = m_Effect->GetParameterByName(0, "fvDiffuse");
-	m_SpecularColHandle = m_Effect->GetParameterByName(0, "fvSpecular");
-	m_AmbientColHandle = m_Effect->GetParameterByName(0, "fvAmbient");
-	m_ShininessHandle = m_Effect->GetParameterByName(0, "fSpecularPower");
+	m_LightPosWHandle = m_Effect->GetParameterByName(0, "lightPos");
+	m_ViewerPosWHandle = m_Effect->GetParameterByName(0, "camPosition");
+	m_DiffuseColHandle = m_Effect->GetParameterByName(0, "Diffuse");
+	m_SpecularColHandle = m_Effect->GetParameterByName(0, "Specular");
+	m_AmbientColHandle = m_Effect->GetParameterByName(0, "Ambient");
+	m_ShininessHandle = m_Effect->GetParameterByName(0, "SpecularPower");
 
 	m_materialHandle = m_Effect->GetParameterByName(0, "base_Tex");
 
