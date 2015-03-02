@@ -36,10 +36,10 @@ Sphere::~Sphere()
 //-----------------------------------------------------------------------------
 void Sphere::Create(IDirect3DDevice9* gd3dDevice)
 {
-	m_material->setTexture(gd3dDevice, "stone2.dds");
-	//m_material->setTexture(gd3dDevice, "marble.bmp");
+	//m_material->setTexture(gd3dDevice, "stone2.dds");
+	m_material->setTexture(gd3dDevice, "marble.bmp");
 
-	D3DXCreateEffectFromFileA(gd3dDevice, "TexturedGauroud.fx", 0, 0, 0, 0, &shader, 0);
+	D3DXCreateEffectFromFileA(gd3dDevice, "Textured_Phong.fx", 0, 0, 0, 0, &shader, 0);
 	m_material->ConnectToEffect(shader);
 	m_material->buildFX();
 
@@ -57,6 +57,7 @@ void Sphere::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& 
 	GfxStats::GetInstance()->addVertices(m_verticeCount);
 	GfxStats::GetInstance()->addTriangles(m_triangleCount);//how many triangles are there?
 
+	HR(shader->SetMatrix("matView", &m_World));
 	HR(shader->SetMatrix("matViewProjection", &(m_World*view*projection)));
 	HR(shader->SetBool("spec_On", specularOn));
 	HR(shader->SetBool("diff_On", diffuseOn));

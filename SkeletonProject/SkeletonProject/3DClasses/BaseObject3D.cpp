@@ -37,11 +37,12 @@ BaseObject3D::~BaseObject3D(void)
 //-----------------------------------------------------------------------------
 void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 {
+	HRESULT hr;
 	//m_material->setTexture(gd3dDevice, "stone2.dds");
 	m_material->setTexture(gd3dDevice, "marble.bmp");
 	//D3DXCreateTextureFromFile(gd3dDevice, "marble.bmp", &m_texture);
 
-	D3DXCreateEffectFromFileA(gd3dDevice, "TexturedGauroud.fx", 0, 0, 0, 0, &shader, 0);
+	hr = D3DXCreateEffectFromFileA(gd3dDevice, "Textured_Phong.fx", 0, 0, 0, 0, &shader, 0);
 	m_material->ConnectToEffect(shader);
 	m_material->buildFX();
 
@@ -61,6 +62,7 @@ void BaseObject3D::Render( IDirect3DDevice9* gd3dDevice,
     GfxStats::GetInstance()->addVertices(8);
     GfxStats::GetInstance()->addTriangles(12);
 
+	HR(shader->SetMatrix("matView", &m_World));
 	HR(shader->SetMatrix("matViewProjection", &(m_World*view*projection)));
 	HR(shader->SetBool("spec_On", specularOn));
 	HR(shader->SetBool("diff_On", diffuseOn));

@@ -15,8 +15,9 @@ BaseMaterial::BaseMaterial(void)
 	m_texture = NULL;
 
 	m_Shininess = 0.7f;
-	m_DiffuseColor = D3DXVECTOR3(0.5f, 0.5f, 1.0f);
-	m_SpecularColor = D3DXVECTOR3(0.5f, 0.5f, 1.0f);
+	m_DiffuseColor = D3DXVECTOR4(0.66f, 0.66f, 0.66f, 1.0f);
+	m_SpecularColor = D3DXVECTOR4(1.0f, 0.5f, 0.5f, 1.0f);
+	m_AmbientColor = D3DXVECTOR4(0.69f, 0.69f, 0.69f, 1.0f);
 
 
 }
@@ -46,21 +47,20 @@ void BaseMaterial::setTexture(IDirect3DDevice9* gd3dDevice, LPCSTR filename)
 //gset the handles in BaseMaterial to the ones in the shader
 void BaseMaterial::buildFX()
 {
-	m_WorldMatHandle = m_Effect->GetParameterByName(0, "matWorld");
+	m_WorldMatHandle = m_Effect->GetParameterByName(0, "matView");
 	m_ViewProjectionMatHandle = m_Effect->GetParameterByName(0, "matViewProjection");
-	m_LightPosWHandle = m_Effect->GetParameterByName(0, "lightPos");
-	m_ViewerPosWHandle = m_Effect->GetParameterByName(0, "viewerPos");
-	m_DiffuseColHandle = m_Effect->GetParameterByName(0, "diffuseCol");
-	m_SpecularColHandle = m_Effect->GetParameterByName(0, "specularCol");
-	m_ShininessHandle = m_Effect->GetParameterByName(0, "shine");
+	m_LightPosWHandle = m_Effect->GetParameterByName(0, "fvLightPosition");
+	m_ViewerPosWHandle = m_Effect->GetParameterByName(0, "fvEyePosition");
+	m_DiffuseColHandle = m_Effect->GetParameterByName(0, "fvDiffuse");
+	m_SpecularColHandle = m_Effect->GetParameterByName(0, "fvSpecular");
+	m_AmbientColHandle = m_Effect->GetParameterByName(0, "fvAmbient");
+	m_ShininessHandle = m_Effect->GetParameterByName(0, "fSpecularPower");
 
 	m_materialHandle = m_Effect->GetParameterByName(0, "base_Tex");
 
-	HR(m_Effect->SetMatrix(m_WorldMatHandle, &m_WorldMat));
-	HR(m_Effect->SetMatrix(m_ViewProjectionMatHandle, &m_ViewProjectionMat));
-
 	HR(m_Effect->SetValue(m_DiffuseColHandle, m_DiffuseColor, sizeof(float) * 4));
 	HR(m_Effect->SetValue(m_SpecularColHandle, m_SpecularColor, sizeof(float) * 4));
+	HR(m_Effect->SetValue(m_AmbientColHandle, m_AmbientColor, sizeof(float) * 4));
 	HR(m_Effect->SetFloat(m_ShininessHandle, m_Shininess));
 	HR(m_Effect->SetTexture(m_materialHandle, m_texture));
 }

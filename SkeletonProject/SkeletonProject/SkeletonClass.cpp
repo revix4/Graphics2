@@ -72,7 +72,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_Objects.push_back(new BaseObject3D());
 	m_Objects[3]->Create(gd3dDevice);
 
-	mLightPos = D3DXVECTOR3(0, 100, 0);
+	mLightPos = D3DXVECTOR3(50, 100, 1);
 
 	mWireFrameOn = false;
 	mTextureOn = true;
@@ -192,7 +192,8 @@ void SkeletonClass::updateScene(float dt)
 	// view matrix every frame with the latest changes.
 	buildViewMtx();
 
-	
+	//D3DXMATRIX mViewInv;
+	//D3DXMatrixTranspose(&mViewInv, &mView);
 	m_Objects[mCurrentObject % m_Objects.size()]->Update(mLightPos, D3DXVECTOR3(mView._41, mView._42, mView._43));
 }
 

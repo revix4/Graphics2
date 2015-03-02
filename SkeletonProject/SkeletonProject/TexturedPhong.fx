@@ -50,21 +50,33 @@ struct VS_INPUT
 {
    float4 Position : POSITION0;
    float2 Texcoord : TEXCOORD0;
+   float3 Normal :   NORMAL0;
 };
 
 struct VS_OUTPUT 
 {
-   float4 Position : POSITION0;
-   float2 Texcoord : TEXCOORD0;
+   float4 Position :        POSITION0;
+   float2 Texcoord :        TEXCOORD0;
+   float3 ViewDir  :        TEXCOORD1;
+   //float3 LightDirection :  TEXCOORD2;
+   //float3 Normal :          TEXCOORD3;
    
 };
 
 VS_OUTPUT VS_0( VS_INPUT Input )
 {
-   VS_OUTPUT Output;
+   VS_OUTPUT Output(0);
 
-   Output.Position = mul( Input.Position, matViewProjection );
-   Output.Texcoord = Input.Texcoord;
+   Output.Position         = mul( Input.Position, matViewProjection );
+   Output.Texcoord         = Input.Texcoord;
+
+   //getting the object position in world space
+   float3 objPos = mul(Input.Position, matWorld);
+
+   //get the vector from cam to object
+   float3 vd = viewerPos - objPos;
+   Output.float3 ViewDir = vd;
+   //Output.ViewDir = viewerPos - objPos;
 
    return( Output );
    
