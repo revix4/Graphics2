@@ -111,12 +111,27 @@ float4 PS_0( PS_INPUT Input ) : COLOR0
    float3 Reflection     = normalize( ( ( 2.0f * NL ) * ( norm ) ) - LightDir ); 
 
    float  RV           = max( 0.0f, dot( Reflection, ViewDir ) );
-   
-   float4 BaseColor      = tex2D( baseMap, Input.Texcoord );
+
+   float4 BaseColor = float4(0.5f,0.5f,0.5f,1.0f);
+
+   if(tex_On)
+   {
+   	BaseColor      = tex2D( baseMap, Input.Texcoord );
+   }
    
    float4 TotalAmbient   = Ambient * BaseColor; 
-   float4 TotalDiffuse   = Diffuse * NL * BaseColor; 
-   float4 TotalSpecular  = Specular * pow( (RV), SpecularPower );
+   float4 TotalDiffuse   = float4(0.0f,0.0f,0.0f,1.0f); 
+   float4 TotalSpecular  = float4(0.0f,0.0f,0.0f,1.0f);
+
+   if(spec_On)
+   {
+   	TotalSpecular  = Specular * pow( (RV), SpecularPower );
+   }
+
+   if(diff_On)
+   {
+   	TotalDiffuse   = Diffuse * NL * BaseColor; 
+   }
    
    return(TotalAmbient + TotalDiffuse + TotalSpecular );
       
