@@ -35,6 +35,7 @@ private:
 protected:
 	virtual void buildVertexBuffer(IDirect3DDevice9* gd3dDevice);
 	virtual void buildIndexBuffer(IDirect3DDevice9* gd3dDevice);
+	virtual void setTexCoord(IDirect3DDevice9* gd3dDevice);
 
 public:
 	Cylinder(float topRadius, float bottomRadius, float height, int slices, int stacks);

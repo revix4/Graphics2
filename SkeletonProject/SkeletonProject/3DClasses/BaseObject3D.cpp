@@ -31,19 +31,26 @@ BaseObject3D::~BaseObject3D(void)
 	//ReleaseCOM(m_IndexBuffer);
 
 	ReleaseCOM(mesh);
+	ReleaseCOM(shader);
 }
 
 //-----------------------------------------------------------------------------
 void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 {
-	D3DXCreateEffectFromFileA(gd3dDevice, "Effect.fx", 0, 0, 0, 0, &shader, 0);
+	//m_material->setTexture(gd3dDevice, "stone2.dds");
+	m_material->setTexture(gd3dDevice, "marble.bmp");
+	//D3DXCreateTextureFromFile(gd3dDevice, "marble.bmp", &m_texture);
+
+	D3DXCreateEffectFromFileA(gd3dDevice, "Textured.fx", 0, 0, 0, 0, &shader, 0);
 	m_material->ConnectToEffect(shader);
 	m_material->buildFX();
 
-	D3DXCreateBox(gd3dDevice, 1, 1, 1, &mesh, 0);
+	D3DXCreateBox(gd3dDevice, 10, 10, 10, &mesh, 0);
 
     //buildVertexBuffer( gd3dDevice );
     //buildIndexBuffer( gd3dDevice );
+
+	setTexCoord(gd3dDevice);
 }
 
 //-----------------------------------------------------------------------------
@@ -55,7 +62,6 @@ void BaseObject3D::Render( IDirect3DDevice9* gd3dDevice,
     GfxStats::GetInstance()->addTriangles(12);
 
 	HR(shader->SetMatrix("matViewProjection", &(m_World*view*projection)));
-	//HR(shader->SetTexture, m_material, mTex0));
 
 	unsigned int numPass = 0;
 	HR(shader->Begin(&numPass, 0));
@@ -111,14 +117,14 @@ void BaseObject3D::buildVertexBuffer( IDirect3DDevice9* gd3dDevice )
 	VertexPos* v = 0;
 	HR(m_VertexBuffer->Lock(0, 0, (void**)&v, 0));
 
-	v[0] = VertexPos(-1.0f, -1.0f, -1.0f, color, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f);
-	v[1] = VertexPos(-1.0f, 1.0f, -1.0f, color, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f);
-	v[2] = VertexPos(1.0f, 1.0f, -1.0f, color, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f);
-	v[3] = VertexPos(1.0f, -1.0f, -1.0f, color, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f);
-	v[4] = VertexPos(-1.0f, -1.0f, 1.0f, color, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f);
-	v[5] = VertexPos(-1.0f, 1.0f, 1.0f, color, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
-	v[6] = VertexPos(1.0f, 1.0f, 1.0f, color, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	v[7] = VertexPos(1.0f, -1.0f, 1.0f, color, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	v[0] = VertexPos(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
+	v[1] = VertexPos(-1.0f, 1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
+	v[2] = VertexPos(1.0f, 1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
+	v[3] = VertexPos(1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
+	v[4] = VertexPos(-1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+	v[5] = VertexPos(-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
+	v[6] = VertexPos(1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+	v[7] = VertexPos(1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
 
 	HR(m_VertexBuffer->Unlock());
 }
@@ -162,6 +168,69 @@ void BaseObject3D::buildIndexBuffer( IDirect3DDevice9* gd3dDevice )
 	k[33] = 4; k[34] = 3; k[35] = 7;
 
 	HR(m_IndexBuffer->Unlock());
+}
+
+void BaseObject3D::setTexCoord(IDirect3DDevice9* gd3dDevice)
+{
+	D3DVERTEXELEMENT9 elements[64];
+	UINT numElements = 0;
+	VertexPos::Decl->GetDeclaration(elements, &numElements);
+
+	ID3DXMesh* temp = 0;
+
+	HR(mesh->CloneMesh(D3DXMESH_SYSTEMMEM, elements, gd3dDevice, &temp));
+
+	ReleaseCOM(mesh);
+
+	//gen tex coords
+	VertexPos* vertices = 0;
+	HR(temp->LockVertexBuffer(0, (void**)&vertices));
+
+	D3DXVECTOR3 maxPoint(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+	D3DXVECTOR3 minPoint(FLT_MAX, FLT_MAX, FLT_MAX);
+
+	for (UINT i = 0; i < temp->GetNumVertices(); ++i)
+	{
+		D3DXVec3Maximize(&maxPoint, &maxPoint, &vertices[i].pos);
+		D3DXVec3Minimize(&minPoint, &minPoint, &vertices[i].pos);
+	}
+
+	// Iterate over each vertex and compute its texture coordinate.
+	for (UINT i = 0; i < temp->GetNumVertices(); ++i)
+	{
+		// Get the coordinates along the axes orthogonal to the
+		// axis the cylinder is aligned with.
+
+		float a = 0.0f;
+		float b = 0.0f;
+		float h = 0.0f;
+
+		a = minPoint.x;
+		b = maxPoint.x;
+		h = b - a;
+
+		float x = 0.0f;
+		float y = 0.0f;
+		float z = 0.0f;
+
+		x = vertices[i].pos.x;
+		z = vertices[i].pos.y;
+		y = vertices[i].pos.z;
+
+		float u = (y) / h - .5;
+		float v = (x) / h - .5;
+
+		vertices[i].tex0.x = u;
+		vertices[i].tex0.y = v;
+	}
+
+	HR(temp->UnlockVertexBuffer());
+
+	// Clone back to a hardware mesh.
+	HR(temp->CloneMesh(D3DXMESH_MANAGED | D3DXMESH_WRITEONLY,
+		elements, gd3dDevice, &mesh));
+
+	ReleaseCOM(temp);
 }
 
 //void 

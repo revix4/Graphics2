@@ -41,6 +41,7 @@ protected:
     // Replace the code in the following methods
     virtual void buildVertexBuffer( IDirect3DDevice9* gd3dDevice );
     virtual void buildIndexBuffer( IDirect3DDevice9* gd3dDevice );
+	virtual void setTexCoord(IDirect3DDevice9* gd3dDevice);
 
 public:
     BaseObject3D(void);

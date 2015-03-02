@@ -1,85 +1,63 @@
-//**************************************************************//
-//  Effect File exported by RenderMonkey 1.6
+//=============================================================================
+// clouds.fx by Frank Luna (C) 2004 All Rights Reserved.
 //
-//  - Although many improvements were made to RenderMonkey FX  
-//    file export, there are still situations that may cause   
-//    compilation problems once the file is exported, such as  
-//    occasional naming conflicts for methods, since FX format 
-//    does not support any notions of name spaces. You need to 
-//    try to create workspaces in such a way as to minimize    
-//    potential naming conflicts on export.                    
-//    
-//  - Note that to minimize resulting name collisions in the FX 
-//    file, RenderMonkey will mangle names for passes, shaders  
-//    and function names as necessary to reduce name conflicts. 
-//**************************************************************//
+// Scrolls two cloud textures to simulate moving clouds.
+//=============================================================================
 
-//--------------------------------------------------------------//
-// Effect1
-//--------------------------------------------------------------//
-//--------------------------------------------------------------//
-// Pass 0
-//--------------------------------------------------------------//
-string Effect_Group_1_Effect1_Pass_0_Model : ModelData = "..\\..\\..\\..\\..\\..\\..\\Program Files (x86)\\AMD\\RenderMonkey 1.82\\Examples\\Media\\Models\\Sphere.3ds";
+ 
+uniform extern float4x4 matViewProjection;
+uniform extern texture gCloudTex0;
+//uniform extern texture gCloudTex1;
+//uniform extern float2  gTexOffset0;
+//uniform extern float2  gTexOffset1;
 
-float4x4 matViewProjection : ViewProjection;
-
-uniform extern float4 g_worldMat;
-uniform extern float4 g_viewProjMat;
-uniform extern float4 g_lightPos;
-uniform extern float4 g_viewerPos;
-uniform extern float4 g_diffuseCol;
-uniform extern float4 g_specularCol;
-uniform extern float4 g_shine;
-
-struct VS_INPUT 
+sampler CloudS0 = sampler_state
 {
-   float3 Position : POSITION0;
-   float4 Color    : COLOR0;
-   float2 TexCoord : TEXCOORD0;
-   float3 Normal   : NORMAL0;
+	Texture = <gCloudTex0>;
+	MinFilter = Anisotropic;
+	MagFilter = LINEAR;
+	MipFilter = LINEAR;
+	MaxAnisotropy = 8;
+	AddressU  = WRAP;
+    AddressV  = WRAP;
 };
 
-struct VS_OUTPUT 
+struct OutputVS
 {
-   float4 Position : POSITION0;
-   float4 Color    : COLOR0;
-   
+    float4 posH : POSITION0;
+    float2 tex0 : TEXCOORD0;
+    //float2 tex1 : TEXCOORD1;
 };
 
-VS_OUTPUT Effect_Group_1_Effect1_Pass_0_Vertex_Shader_vs_main( VS_INPUT Input )
+OutputVS CloudsVS(float3 posL : POSITION0, float4 color:COLOR0 , float2 tex0: TEXCOORD0, float3 normalL : NORMAL0)
 {
-   VS_OUTPUT Output = (VS_OUTPUT)0;
-
-   Output.Position = mul( float4(Input.Position, 1.0f), matViewProjection );
-   Output.Color = Input.Color;
-   
-   return( Output );
-   
+    // Zero out our output.
+	OutputVS outVS = (OutputVS)0;
+	
+	// Transform to homogeneous clip space.
+	outVS.posH = mul(float4(posL, 1.0f), matViewProjection);
+	
+	// Pass on texture coordinates to be interpolated in rasterization.
+	outVS.tex0 = tex0;// + gTexOffset0;
+	//.outVS.tex1 = tex0 + gTexOffset1;
+	
+	// Done--return the output.
+    return outVS;
 }
 
-
-
-
-float4 Effect_Group_1_Effect1_Pass_0_Pixel_Shader_ps_main( VS_OUTPUT Output) : COLOR0
-{   
-   return( Output.Color );
-   //return( float4( 0.0f, 1.0f, 0.0f, 1.0f ) );
-}
-
-
-
-
-//--------------------------------------------------------------//
-// Technique Section for Effect Workspace.Effect Group 1.Effect1
-//--------------------------------------------------------------//
-technique Effect1
+float4 CloudsPS(float4 c : COLOR0, float2 tex0 : TEXCOORD0) : COLOR
 {
-   pass Pass_0
-   {
-      VertexShader = compile vs_2_0 Effect_Group_1_Effect1_Pass_0_Vertex_Shader_vs_main();
-      PixelShader = compile ps_2_0 Effect_Group_1_Effect1_Pass_0_Pixel_Shader_ps_main();
-   }
-
+	float3 c0 = tex2D(CloudS0, tex0).rgb;
+	//float3 c1 = tex2D(CloudS1, tex1).rgb;
+	float3 white = float3(0.0f, 0.0f, 1.0f);
+    return float4(c0+white, 1.0f);
 }
 
+technique CloudsTech
+{
+    pass P0
+    {
+        vertexShader = compile vs_2_0 CloudsVS();
+        pixelShader  = compile ps_2_0 CloudsPS();
+    }
+}

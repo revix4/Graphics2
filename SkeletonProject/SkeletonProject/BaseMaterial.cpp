@@ -12,12 +12,15 @@
 BaseMaterial::BaseMaterial(void)
 {
     m_Effect = NULL;
+	m_texture = NULL;
 }
 
 //-----------------------------------------------------------------------------
 // Relase shader, blah...
 BaseMaterial::~BaseMaterial(void)
 {
+	ReleaseCOM(m_Effect);
+	ReleaseCOM(m_texture);
 }
 
 //-----------------------------------------------------------------------------
@@ -37,13 +40,17 @@ void BaseMaterial::setTexture(IDirect3DDevice9* gd3dDevice, LPCSTR filename)
 //gset the handles in BaseMaterial to the ones in the shader
 void BaseMaterial::buildFX()
 {
-	m_WorldMatHandle = m_Effect->GetParameterByName(0, "g_worldMat");
-	m_ViewProjectionMatHandle = m_Effect->GetParameterByName(0, "g_viewProjMat");
-	m_LightPosWHandle = m_Effect->GetParameterByName(0, "g_lightPos");
-	m_ViewerPosWHandle = m_Effect->GetParameterByName(0, "g_viewerPos");
-	m_DiffuseColHandle = m_Effect->GetParameterByName(0, "g_diffuseCol");
-	m_SpecularColHandle = m_Effect->GetParameterByName(0, "g_specularCol");
-	m_ShininessHandle = m_Effect->GetParameterByName(0, "g_shine");
+	//m_WorldMatHandle = m_Effect->GetParameterByName(0, "g_worldMat");
+	//m_ViewProjectionMatHandle = m_Effect->GetParameterByName(0, "g_viewProjMat");
+	//m_LightPosWHandle = m_Effect->GetParameterByName(0, "g_lightPos");
+	//m_ViewerPosWHandle = m_Effect->GetParameterByName(0, "g_viewerPos");
+	//m_DiffuseColHandle = m_Effect->GetParameterByName(0, "g_diffuseCol");
+	//m_SpecularColHandle = m_Effect->GetParameterByName(0, "g_specularCol");
+	//m_ShininessHandle = m_Effect->GetParameterByName(0, "g_shine");
+
+
+	m_materialHandle = m_Effect->GetParameterByName(0, "base_Tex");
+	HR(m_Effect->SetTexture(m_materialHandle, m_texture));
 }
 
 //=============================================================================

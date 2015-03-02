@@ -57,6 +57,8 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	mCameraRotationY = 1.75f * D3DX_PI;
 	mCameraRotationX = 1.75f * D3DX_PI;
 
+	InitAllVertexDeclarations();
+
     // repleace or add to the following object creation
 	m_Objects.push_back(new Cylinder(5, 5, 10, 25, 25));
     m_Objects[0]->Create( gd3dDevice );
@@ -77,8 +79,6 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	mDiffuseOn = true;
 
 	onResetDevice();
-
-	InitAllVertexDeclarations();
 }
 
 SkeletonClass::~SkeletonClass()

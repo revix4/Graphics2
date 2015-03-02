@@ -14,21 +14,19 @@ void DestroyAllVertexDeclarations();
 //=============================================================================
 struct VertexPos
 {
-	VertexPos() :pos(0.0f, 0.0f, 0.0f), color(D3DCOLOR_XRGB(0,0,0)),
-		texCoord(0.0f, 0.0f), normal(0.0f, 0.0f, 0.0f){}
-
-	VertexPos(float x, float y, float z, D3DCOLOR c, float u, float v, float nX, float nY, float nZ) :
-		pos(x, y, z), color(c),
-		texCoord(u, v), normal(nX, nY, nZ){}
-
-	VertexPos(const D3DXVECTOR3& v, const D3DCOLOR& c, const D3DXVECTOR2& t, const D3DXVECTOR3& n) :
-		pos(v), color(c),
-		texCoord(t), normal(n){}
+	VertexPos()
+		:pos(0.0f, 0.0f, 0.0f),
+		normal(0.0f, 0.0f, 0.0f),
+		tex0(0.0f, 0.0f){}
+	VertexPos(float x, float y, float z,
+		float nx, float ny, float nz,
+		float u, float v) :pos(x, y, z), normal(nx, ny, nz), tex0(u, v){}
+	VertexPos(const D3DXVECTOR3& v, const D3DXVECTOR3& n, const D3DXVECTOR2& uv)
+		:pos(v), normal(n), tex0(uv){}
 
 	D3DXVECTOR3 pos;
-	D3DCOLOR color;
-	D3DXVECTOR2 texCoord;
 	D3DXVECTOR3 normal;
+	D3DXVECTOR2 tex0;
 
 	static IDirect3DVertexDeclaration9* Decl;
 };

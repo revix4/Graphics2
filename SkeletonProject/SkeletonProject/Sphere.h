@@ -30,6 +30,7 @@ private:
 protected:
 	virtual void buildVertexBuffer(IDirect3DDevice9* gd3dDevice);
 	virtual void buildIndexBuffer(IDirect3DDevice9* gd3dDevice);
+	virtual void setTexCoord(IDirect3DDevice9* gd3dDevice);
 
 public:
 	Sphere(float radius, int sliceCount, int stackCount);

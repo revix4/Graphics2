@@ -39,6 +39,7 @@ protected:
 
 	//---------- Texturing Data ------------
 	IDirect3DTexture9* m_texture;
+	D3DXHANDLE					m_materialHandle;
 
 public:
     BaseMaterial(void);

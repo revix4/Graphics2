@@ -36,12 +36,18 @@ Sphere::~Sphere()
 //-----------------------------------------------------------------------------
 void Sphere::Create(IDirect3DDevice9* gd3dDevice)
 {
-	D3DXCreateEffectFromFileA(gd3dDevice, "Effect.fx", 0, 0, 0, 0, &shader, 0);
+	m_material->setTexture(gd3dDevice, "stone2.dds");
+	//m_material->setTexture(gd3dDevice, "marble.bmp");
+
+	D3DXCreateEffectFromFileA(gd3dDevice, "Textured.fx", 0, 0, 0, 0, &shader, 0);
+	m_material->ConnectToEffect(shader);
+	m_material->buildFX();
 
 	D3DXCreateSphere(gd3dDevice, m_radius, m_sliceCount, m_stackCount, &mesh, 0);
 
 	//buildVertexBuffer(gd3dDevice);
 	//buildIndexBuffer(gd3dDevice);
+	setTexCoord(gd3dDevice);
 }
 
 //-----------------------------------------------------------------------------
@@ -106,7 +112,7 @@ void Sphere::buildVertexBuffer(IDirect3DDevice9* gd3dDevice)
 	float verticleAngle = 0;
 	//compute vertices for wall
 
-	v[0] = VertexPos(0, m_radius, 0, color, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f);
+	v[0] = VertexPos(0, m_radius, 0, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
 	vertexCount++;
 
 	for (int i = 1; i < m_stackCount; i++)
@@ -128,13 +134,13 @@ void Sphere::buildVertexBuffer(IDirect3DDevice9* gd3dDevice)
 			D3DXVECTOR3 *n = new D3DXVECTOR3();
 			D3DXVec3Normalize(n, &p);
 
-			v[vertexCount] = VertexPos(r*c, y, r*s, color, U, V, n->x, n->y, n->z);
+			v[vertexCount] = VertexPos(r*c, y, r*s, n->x, n->y, n->z, U, V);
 			vertexCount++;
 		}
 		verticleAngle += (float)(2 * PI / ringCount);
 	}
 
-	v[vertexCount] = VertexPos(0, -m_radius, 0, color, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f);
+	v[vertexCount] = VertexPos(0, -m_radius, 0, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f);
 	vertexCount++;
 
 	HR(m_VertexBuffer->Unlock());
@@ -198,4 +204,48 @@ void Sphere::buildIndexBuffer(IDirect3DDevice9* gd3dDevice)
 	}
 
 	HR(m_IndexBuffer->Unlock());
+}
+
+void Sphere::setTexCoord(IDirect3DDevice9* gd3dDevice)
+{
+	D3DVERTEXELEMENT9 elements[64];
+	UINT numElements = 0;
+	VertexPos::Decl->GetDeclaration(elements, &numElements);
+
+	ID3DXMesh* temp = 0;
+	HR(mesh->CloneMesh(D3DXMESH_SYSTEMMEM,
+		elements, gd3dDevice, &temp));
+
+	ReleaseCOM(mesh);
+
+	// Now generate texture coordinates for each vertex.
+	VertexPos* vertices = 0;
+	HR(temp->LockVertexBuffer(0, (void**)&vertices));
+
+	for (UINT i = 0; i < temp->GetNumVertices(); ++i)
+	{
+		// Convert to spherical coordinates.
+		D3DXVECTOR3 p = vertices[i].pos;
+
+		float theta = atan2f(p.z, p.x);
+		float phi = acosf(p.y / sqrtf(p.x*p.x + p.y*p.y + p.z*p.z));
+
+		// Phi and theta give the texture coordinates, but are not in 
+		// the range [0, 1], so scale them into that range.
+
+		float u = theta / (2.0f*D3DX_PI);
+		float v = phi / D3DX_PI;
+
+		// Save texture coordinates.
+
+		vertices[i].tex0.x = u;
+		vertices[i].tex0.y = v;
+	}
+	HR(temp->UnlockVertexBuffer());
+
+	// Clone back to a hardware mesh.
+	HR(temp->CloneMesh(D3DXMESH_MANAGED | D3DXMESH_WRITEONLY,
+		elements, gd3dDevice, &mesh));
+
+	ReleaseCOM(temp);
 }
