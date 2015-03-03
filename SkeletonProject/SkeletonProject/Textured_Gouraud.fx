@@ -80,9 +80,21 @@ VS_OUTPUT VS_0( VS_INPUT Input )
 	//pass on the texture coordinate so it can be used in the pixel shader
 	Output.Texcoord         = Input.Texcoord;
 	
+	float4 finalDiffuse = float4(0.0f,0.0f,0.0f,1.0f);
+	float4 finalSpecular = float4(0.0f,0.0f,0.0f,1.0f);
+	
+	if(diff_On)
+	{
+		finalDiffuse = diff  * Diffuse;
+	}
+	if(spec_On)
+	{
+		finalSpecular = spec*Specular;
+	}
+	
 	//this is the final color, but missing the texture and ambient components
 	//those will be added in the pixel shader
-	Output.finColor = diff  * Diffuse + spec*Specular;
+	Output.finColor = finalDiffuse + finalSpecular;
 	return Output;
 }
 
