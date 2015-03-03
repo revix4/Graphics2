@@ -43,11 +43,15 @@ Cylinder::~Cylinder()
 void Cylinder::Create(IDirect3DDevice9* gd3dDevice)
 {
 	//m_material->setTexture(gd3dDevice, "stone2.dds");
-	m_material->setTexture(gd3dDevice, "marble.bmp");
+	m_materialG->setTexture(gd3dDevice, "marble.bmp");
+	m_materialP->setTexture(gd3dDevice, "marble.bmp");
 
-	D3DXCreateEffectFromFileA(gd3dDevice, "Textured_Phong.fx", 0, 0, 0, 0, &shader, 0);
-	m_material->ConnectToEffect(shader);
-	m_material->buildFX();
+	D3DXCreateEffectFromFileA(gd3dDevice, "Textured_Phong.fx", 0, 0, 0, 0, &Phong, 0);
+	D3DXCreateEffectFromFileA(gd3dDevice, "Textured_Gouraud.fx", 0, 0, 0, 0, &Gouraud, 0);
+	m_materialP->ConnectToEffect(Phong);
+	m_materialG->ConnectToEffect(Gouraud);
+	m_materialP->buildFX();
+	m_materialG->buildFX();
 
 	D3DXCreateCylinder(gd3dDevice, m_topRadius, m_bottomRadius, m_height, m_sliceCount, m_stackCount, &mesh, 0);
 
@@ -57,24 +61,25 @@ void Cylinder::Create(IDirect3DDevice9* gd3dDevice)
 }
 
 //-----------------------------------------------------------------------------
-void Cylinder::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn)
+void Cylinder::RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn)
 {
 	// Update the statistics singlton class
 	GfxStats::GetInstance()->addVertices(m_verticeCount);
 	GfxStats::GetInstance()->addTriangles(m_triangleCount);//how many triangles are there?
 
-	HR(shader->SetMatrix("matView", &m_World));
-	HR(shader->SetMatrix("matViewProjection", &(m_World*view*projection)));
-	HR(shader->SetBool("spec_On", specularOn));
-	HR(shader->SetBool("diff_On", diffuseOn));
-	HR(shader->SetBool("tex_On", textureOn));
+	HR(Phong->SetMatrix("matView", &m_World));
+	HR(Phong->SetMatrix("matViewProjection", &(m_World*view*projection)));
+	HR(Phong->SetBool("spec_On", specularOn));
+	HR(Phong->SetBool("diff_On", diffuseOn));
+	HR(Phong->SetBool("tex_On", textureOn));
 
 	unsigned int numPass = 0;
-	HR(shader->Begin(&numPass, 0));
+	HR(Phong->Begin(&numPass, 0));
 
 	for (unsigned int i = 0; i < numPass; i++)
 	{
-		HR(shader->BeginPass(i));
+		HR(Phong->BeginPass(i));
+		HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, D3DWRAP_U));
 
 		// Set the buffers and format
 		//HR(gd3dDevice->SetStreamSource(0, m_VertexBuffer, 0, sizeof(VertexPos)));
@@ -86,21 +91,65 @@ void Cylinder::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX
 		HR(gd3dDevice->SetTransform(D3DTS_VIEW, &view));
 		HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &projection));
 
-		HR(shader->CommitChanges());
+		HR(Phong->CommitChanges());
 
 		// Send to render
 		//HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_verticeCount, 0, m_triangleCount));
 		HR(mesh->DrawSubset(0));
 
-		HR(shader->EndPass());
+		HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, 0));
+		HR(Phong->EndPass());
 	}
-	HR(shader->End());
+	HR(Phong->End());
+}
+
+void Cylinder::RenderGouraud(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn)
+{
+	// Update the statistics singlton class
+	GfxStats::GetInstance()->addVertices(m_verticeCount);
+	GfxStats::GetInstance()->addTriangles(m_triangleCount);//how many triangles are there?
+
+	HR(Gouraud->SetMatrix("matView", &m_World));
+	HR(Gouraud->SetMatrix("matViewProjection", &(m_World*view*projection)));
+	HR(Gouraud->SetBool("spec_On", specularOn));
+	HR(Gouraud->SetBool("diff_On", diffuseOn));
+	HR(Gouraud->SetBool("tex_On", textureOn));
+
+	unsigned int numPass = 0;
+	HR(Gouraud->Begin(&numPass, 0));
+
+	for (unsigned int i = 0; i < numPass; i++)
+	{
+		HR(Gouraud->BeginPass(i));
+		HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, D3DWRAP_U));
+
+		// Set the buffers and format
+		//HR(gd3dDevice->SetStreamSource(0, m_VertexBuffer, 0, sizeof(VertexPos)));
+		//HR(gd3dDevice->SetIndices(m_IndexBuffer));
+		//HR(gd3dDevice->SetVertexDeclaration(VertexPos::Decl));
+
+		// Set matrices and model relevant render date
+		HR(gd3dDevice->SetTransform(D3DTS_WORLD, &m_World));
+		HR(gd3dDevice->SetTransform(D3DTS_VIEW, &view));
+		HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &projection));
+
+		HR(Gouraud->CommitChanges());
+
+		// Send to render
+		//HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_verticeCount, 0, m_triangleCount));
+		HR(mesh->DrawSubset(0));
+
+		HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, 0));
+		HR(Gouraud->EndPass());
+	}
+	HR(Gouraud->End());
 }
 
 //-----------------------------------------------------------------------------
 void Cylinder::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos)
 {
-	m_material->Update(lightPos, viewPos);
+	m_materialG->Update(lightPos, viewPos);
+	m_materialP->Update(lightPos, viewPos);
 }
 
 //-----------------------------------------------------------------------------

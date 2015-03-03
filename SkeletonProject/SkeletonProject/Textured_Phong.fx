@@ -54,15 +54,18 @@ struct VS_OUTPUT
 VS_OUTPUT VS_0( VS_INPUT Input )
 {
    VS_OUTPUT Output;
-
+   
+   //get position in world space
    Output.Position         = mul( Input.Position, matViewProjection );
    Output.Texcoord         = Input.Texcoord;
+
+   //object position in view space
+   float3 ObjectPosition = mul( Input.Position, matView );
    
-   float3 fvObjectPosition = mul( Input.Position, matView );
-   
-   Output.ViewDirection    = camPosition - fvObjectPosition;
-   //Output.ViewDirection = normalize(-camPosition);
-   Output.LightDirection   = lightPos - fvObjectPosition;
+   //cam to obj vector
+   Output.ViewDirection    = camPosition - ObjectPosition;
+   //light to object vector
+   Output.LightDirection   = lightPos - ObjectPosition;
    Output.Normal           = mul( Input.Normal, matView );
       
    return( Output );
@@ -102,16 +105,19 @@ struct PS_INPUT
 
 float4 PS_0( PS_INPUT Input ) : COLOR0
 {      
+   //normalize the 3 vectors
    float3 LightDir = normalize( Input.LightDirection );
-   float3 norm         = normalize( Input.Normal );
+   float3 norm     = normalize( Input.Normal );
    float3 ViewDir  = normalize( Input.ViewDirection );
 
+   //get the dot of Normal and Light Pos
    float  NL           = saturate(dot( norm, LightDir )); 
-   
+   //the reflection vector for the material
    float3 Reflection     = normalize( ( ( 2.0f * NL ) * ( norm ) ) - LightDir ); 
-
+   //dot of the reflection and view
    float  RV           = max( 0.0f, dot( Reflection, ViewDir ) );
 
+   //texture color
    float4 BaseColor = float4(0.5f,0.5f,0.5f,1.0f);
 
    if(tex_On)
@@ -119,6 +125,7 @@ float4 PS_0( PS_INPUT Input ) : COLOR0
    	BaseColor      = tex2D( baseMap, Input.Texcoord );
    }
    
+   //total the 3 parts
    float4 TotalAmbient   = Ambient * BaseColor; 
    float4 TotalDiffuse   = float4(0.0f,0.0f,0.0f,1.0f); 
    float4 TotalSpecular  = float4(0.0f,0.0f,0.0f,1.0f);

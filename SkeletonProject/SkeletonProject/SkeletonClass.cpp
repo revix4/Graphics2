@@ -79,6 +79,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	mCurrentObject = 0;
 	mSpecularOn = true;
 	mDiffuseOn = true;
+	mPhongOn = true;
 
 	onResetDevice();
 }
@@ -162,6 +163,8 @@ void SkeletonClass::updateScene(float dt)
 		mSpecularOn = !mSpecularOn;
 	if (gDInput->keyPressed(DIK_D))
 		mDiffuseOn = !mDiffuseOn;
+	if (gDInput->keyPressed(DIK_P))
+		mPhongOn = !mPhongOn;
 
 	if (mCurrentObject == m_Objects.size())
 		mCurrentObject = 0;
@@ -216,7 +219,14 @@ void SkeletonClass::drawScene()
 	}
 
 	// Render all the objects
-	m_Objects[mCurrentObject % m_Objects.size()]->Render(gd3dDevice, mView, mProj, mSpecularOn, mDiffuseOn, mTextureOn);
+	if (mPhongOn)
+	{
+		m_Objects[mCurrentObject % m_Objects.size()]->RenderPhong(gd3dDevice, mView, mProj, mSpecularOn, mDiffuseOn, mTextureOn);
+	}
+	else
+	{
+		m_Objects[mCurrentObject % m_Objects.size()]->RenderGouraud(gd3dDevice, mView, mProj, mSpecularOn, mDiffuseOn, mTextureOn);
+	}
 
 	// display the render statistics
 	GfxStats::GetInstance()->display();

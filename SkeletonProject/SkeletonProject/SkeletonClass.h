@@ -54,6 +54,7 @@ private:
 	int mCurrentObject;
 	bool mSpecularOn;
 	bool mDiffuseOn;
+	bool mPhongOn;
 
 	D3DXMATRIX mView;
 	D3DXMATRIX mProj;
