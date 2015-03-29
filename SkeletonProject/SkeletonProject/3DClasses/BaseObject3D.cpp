@@ -171,14 +171,14 @@ void BaseObject3D::buildVertexBuffer( IDirect3DDevice9* gd3dDevice )
 	VertexPos* v = 0;
 	HR(m_VertexBuffer->Lock(0, 0, (void**)&v, 0));
 
-	v[0] = VertexPos(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
-	v[1] = VertexPos(-1.0f, 1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-	v[2] = VertexPos(1.0f, 1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
-	v[3] = VertexPos(1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
-	v[4] = VertexPos(-1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
-	v[5] = VertexPos(-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
-	v[6] = VertexPos(1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-	v[7] = VertexPos(1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
+	v[0] = VertexPos(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	v[1] = VertexPos(-1.0f, 1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+	v[2] = VertexPos(1.0f, 1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+	v[3] = VertexPos(1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	v[4] = VertexPos(-1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f);
+	v[5] = VertexPos(-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f);
+	v[6] = VertexPos(1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
+	v[7] = VertexPos(1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f);
 
 	HR(m_VertexBuffer->Unlock());
 }
@@ -271,8 +271,8 @@ void BaseObject3D::setTexCoord(IDirect3DDevice9* gd3dDevice)
 		z = vertices[i].pos.y;
 		y = vertices[i].pos.z;
 
-		float u = (y) / h - .5;
-		float v = (x) / h - .5;
+		float u = (y) / h - 0.5f;
+		float v = (x) / h - 0.5f;
 
 		vertices[i].tex0.x = u;
 		vertices[i].tex0.y = v;

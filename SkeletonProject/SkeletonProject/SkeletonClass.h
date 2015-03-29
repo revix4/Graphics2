@@ -43,6 +43,7 @@ public:
 	// Helper methods
 	void buildViewMtx();
 	void buildProjMtx();
+	void input(float dt);
 
 private:
 	float mCameraRotationX;
@@ -51,10 +52,16 @@ private:
 
 	bool mWireFrameOn;
 	bool mTextureOn;
+	bool mNormalMappingOn;
+	bool mReflectionOn;
 	int mCurrentObject;
 	bool mSpecularOn;
 	bool mDiffuseOn;
 	bool mPhongOn;
+
+	float mReflectSpecBlend;
+	float mNormalStrength;
+	int mSpecularCoefficient;
 
 	D3DXMATRIX mView;
 	D3DXMATRIX mProj;

@@ -195,7 +195,7 @@ void Cylinder::buildVertexBuffer(IDirect3DDevice9* gd3dDevice)
 			D3DXVECTOR3 *n = new D3DXVECTOR3();
 			D3DXVec3Normalize(n, cross);
 
-			v[vertexCount] = VertexPos(r*c, y, r*s, n->x, n->y, n->z, (float)j / m_sliceCount, 1.0f - (float)i / m_stackCount);
+			v[vertexCount] = VertexPos(r*c, y, r*s, n->x, n->y, n->z, (float)j / m_sliceCount, 1.0f - (float)i / m_stackCount, t.x, t.y, t.z);
 			vertexCount++;
 		}
 	}
@@ -211,10 +211,10 @@ void Cylinder::buildVertexBuffer(IDirect3DDevice9* gd3dDevice)
 		float U = x / m_height + 0.5f;
 		float V = z / m_height + 0.5f;
 
-		v[vertexCount] = VertexPos(x, y, z, 0.0f, 1.0f, 0.0f, U, V);
+		v[vertexCount] = VertexPos(x, y, z, 0.0f, 1.0f, 0.0f, U, V, 1.0f, 0.0f, 0.0f);
 		vertexCount++;
 	}
-	v[vertexCount] = VertexPos(0.0f, y, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 0.5f);
+	v[vertexCount] = VertexPos(0.0f, y, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f);
 	vertexCount++;
 
 	//bottom cap
@@ -228,11 +228,11 @@ void Cylinder::buildVertexBuffer(IDirect3DDevice9* gd3dDevice)
 		float U = x / m_height - 0.5f;
 		float V = z / m_height - 0.5f;
 
-		v[vertexCount] = VertexPos(x, y, z, 0.0f, -1.0f, 0.0f, U, V);
+		v[vertexCount] = VertexPos(x, y, z, 0.0f, -1.0f, 0.0f, U, V, 1.0f, 0.0f, 0.0f);
 		vertexCount++;
 	}
 
-	v[vertexCount] = VertexPos(0.0f, y, 0.0f, 0.0f, -1.0f, 0.0f, - 0.5f, -0.5f);
+	v[vertexCount] = VertexPos(0.0f, y, 0.0f, 0.0f, -1.0f, 0.0f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f);
 	vertexCount++;
 
 	HR(m_VertexBuffer->Unlock());

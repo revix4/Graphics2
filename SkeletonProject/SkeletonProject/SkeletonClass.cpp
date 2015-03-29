@@ -76,10 +76,20 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 	mWireFrameOn = false;
 	mTextureOn = true;
+	GfxStats::GetInstance()->setTextureOn(mTextureOn);
+	mNormalMappingOn = true;
+	GfxStats::GetInstance()->setNormalMappingOn(mNormalMappingOn);
+	mReflectionOn = true;
+	GfxStats::GetInstance()->setReflectionOn(mReflectionOn);
 	mCurrentObject = 0;
 	mSpecularOn = true;
 	mDiffuseOn = true;
 	mPhongOn = true;
+
+	mReflectSpecBlend = 0;
+	mNormalStrength = 0;
+	mSpecularCoefficient = 2;
+	GfxStats::GetInstance()->setSpecularcoefficient(mSpecularCoefficient);
 
 	onResetDevice();
 }
@@ -135,36 +145,7 @@ void SkeletonClass::updateScene(float dt)
 	GfxStats::GetInstance()->setTriCount(0);
 	GfxStats::GetInstance()->update(dt);
 
-	// Get snapshot of input devices.
-	gDInput->poll();
-
-	if (gDInput->keyDown(DIK_I))
-		mCameraRotationX -= 5.0f * dt;
-	if (gDInput->keyDown(DIK_K))
-		mCameraRotationX += 5.0f * dt;
-
-	if (gDInput->keyDown(DIK_J))
-		mCameraRotationY += 5.0f * dt;
-	if (gDInput->keyDown(DIK_L))
-		mCameraRotationY -= 5.0f * dt;
-
-	if (gDInput->mouseButtonDown(0))
-		mCameraRadius -= 25.0f * dt;
-	if (gDInput->mouseButtonDown(1))
-		mCameraRadius += 25.0f * dt;
-
-	if (gDInput->keyPressed(DIK_W))
-		mWireFrameOn = !mWireFrameOn;
-	if (gDInput->keyPressed(DIK_T))
-		mTextureOn = !mTextureOn;
-	if (gDInput->keyPressed(DIK_O))
-		mCurrentObject++;
-	if (gDInput->keyPressed(DIK_S))
-		mSpecularOn = !mSpecularOn;
-	if (gDInput->keyPressed(DIK_D))
-		mDiffuseOn = !mDiffuseOn;
-	if (gDInput->keyPressed(DIK_P))
-		mPhongOn = !mPhongOn;
+	input(dt);
 
 	if (mCurrentObject == m_Objects.size())
 		mCurrentObject = 0;
@@ -190,6 +171,25 @@ void SkeletonClass::updateScene(float dt)
 	if( mCameraRadius < 5.0f )
 		mCameraRadius = 5.0f;
 
+	if (mNormalStrength < 0.0f)
+	{
+		mNormalStrength = 0.0f;
+	}
+	if (mNormalStrength > 1.0f)
+	{
+		mNormalStrength = 1.0f;
+	}
+
+	if (mReflectSpecBlend < 0.0f)
+	{
+		mReflectSpecBlend = 0.0f;
+	}
+	if (mReflectSpecBlend > 1.0f)
+	{
+		mReflectSpecBlend = 1.0f;
+	}
+	GfxStats::GetInstance()->setReflectSpecBlend(mReflectSpecBlend);
+	GfxStats::GetInstance()->setNormalStrength(mNormalStrength);
 	// The camera position/orientation relative to world space can 
 	// change every frame based on input, so we need to rebuild the
 	// view matrix every frame with the latest changes.
@@ -245,6 +245,70 @@ void SkeletonClass::buildViewMtx()
 	D3DXVECTOR3 pos(x, y, z);
 	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
 	D3DXMatrixLookAtLH(&mView, &pos, &target, &mUp);
+}
+
+void SkeletonClass::input(float dt)
+{
+	// Get snapshot of input devices.
+	gDInput->poll();
+
+	if (gDInput->keyDown(DIK_I))
+		mCameraRotationX -= 5.0f * dt;
+	if (gDInput->keyDown(DIK_K))
+		mCameraRotationX += 5.0f * dt;
+
+	if (gDInput->keyDown(DIK_J))
+		mCameraRotationY += 5.0f * dt;
+	if (gDInput->keyDown(DIK_L))
+		mCameraRotationY -= 5.0f * dt;
+
+	if (gDInput->mouseButtonDown(0))
+		mCameraRadius -= 25.0f * dt;
+	if (gDInput->mouseButtonDown(1))
+		mCameraRadius += 25.0f * dt;
+
+	if (gDInput->keyPressed(DIK_W))
+		mWireFrameOn = !mWireFrameOn;
+	if (gDInput->keyPressed(DIK_T))
+	{
+		mTextureOn = !mTextureOn;
+		GfxStats::GetInstance()->setTextureOn(mTextureOn);
+	}
+	if (gDInput->keyPressed(DIK_O))
+		mCurrentObject++;
+	if (gDInput->keyPressed(DIK_D))
+		mDiffuseOn = !mDiffuseOn;
+	if (gDInput->keyPressed(DIK_P))
+		mPhongOn = !mPhongOn;
+
+	if (gDInput->keyPressed(DIK_R))
+	{
+		mReflectionOn = !mReflectionOn;
+		GfxStats::GetInstance()->setReflectionOn(mReflectionOn);
+	}
+	if (gDInput->keyPressed(DIK_N))
+	{
+		mNormalMappingOn = !mNormalMappingOn;
+		GfxStats::GetInstance()->setNormalMappingOn(mNormalMappingOn);
+	}
+
+	if (gDInput->keyPressed(DIK_S))
+	{
+		mNormalStrength += .1;
+	}
+	if (gDInput->keyPressed(DIK_A))
+	{
+		mNormalStrength -= .1;
+	}
+
+	if (gDInput->keyPressed(DIK_EQUALS))
+	{
+		mReflectSpecBlend += .1;
+	}
+	if (gDInput->keyPressed(DIK_MINUS))
+	{
+		mReflectSpecBlend -= .1;
+	}
 }
 
 void SkeletonClass::buildProjMtx()

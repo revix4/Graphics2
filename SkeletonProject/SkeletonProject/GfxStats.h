@@ -30,6 +30,12 @@ public:
 
 	void setTriCount(DWORD n);
 	void setVertexCount(DWORD n);
+	void setTextureOn(bool on);
+	void setNormalMappingOn(bool on);
+	void setReflectionOn(bool on);
+	void setReflectSpecBlend(float rsb);
+	void setNormalStrength(float strength);
+	void setSpecularcoefficient(int co);
 
 	void update(float dt);
 	void display();
@@ -45,5 +51,11 @@ private:
 	float mMilliSecPerFrame;
 	DWORD mNumTris;
 	DWORD mNumVertices;
+	bool mTextureOn;
+	bool mNormalMappingOn;
+	bool mReflectionOn;
+	float mReflectSpecBlend;
+	float mNormalStrength;
+	int mSpecularCoefficient;
 };
 #endif // GFX_STATS_H

@@ -150,7 +150,7 @@ void Sphere::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos)
 void Sphere::buildVertexBuffer(IDirect3DDevice9* gd3dDevice)
 {
 	int ringCount = m_stackCount + 1;
-	float dPhi = PI / m_stackCount;
+	float dPhi = float(PI / m_stackCount);
 	float dTheta = (float)(2.0f * PI / m_sliceCount);
 	int vertexCount = 0;
 	// Obtain a pointer to a new vertex buffer.
@@ -165,7 +165,7 @@ void Sphere::buildVertexBuffer(IDirect3DDevice9* gd3dDevice)
 	float verticleAngle = 0;
 	//compute vertices for wall
 
-	v[0] = VertexPos(0, m_radius, 0, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
+	v[0] = VertexPos(0, m_radius, 0, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f);
 	vertexCount++;
 
 	for (int i = 1; i < m_stackCount; i++)
@@ -180,20 +180,23 @@ void Sphere::buildVertexBuffer(IDirect3DDevice9* gd3dDevice)
 			float c = cosf(j*dTheta);
 			float s = sinf(j*dTheta);
 
-			float U = (j*dTheta) / 2 * PI;
-			float V = (i*dPhi) / PI;
+			float U = float((j*dTheta) / 2 * PI);
+			float V = float((i*dPhi) / PI);
 
 			D3DXVECTOR3 p(r*c, y, r*s);
 			D3DXVECTOR3 *n = new D3DXVECTOR3();
 			D3DXVec3Normalize(n, &p);
 
-			v[vertexCount] = VertexPos(r*c, y, r*s, n->x, n->y, n->z, U, V);
+			float tx = -m_radius*sinf(i*dPhi)*sinf(j*dTheta);
+			float ty = 0.0f;
+			float tz = m_radius*sinf(i*dPhi)*cosf(j*dTheta);
+			v[vertexCount] = VertexPos(r*c, y, r*s, n->x, n->y, n->z, U, V, tx, ty, tz);
 			vertexCount++;
 		}
 		verticleAngle += (float)(2 * PI / ringCount);
 	}
 
-	v[vertexCount] = VertexPos(0, -m_radius, 0, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f);
+	v[vertexCount] = VertexPos(0, -m_radius, 0, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f);
 	vertexCount++;
 
 	HR(m_VertexBuffer->Unlock());

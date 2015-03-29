@@ -2,5 +2,10 @@ Created by James Potvin and Paul Webster-Pact
 
 Controls:
 IJKL to rotate the objects.
-W and S move around the X axis, A and D are around the Y axis
 Left and right mouse click to zoom in and out.
+P-Switch shaders
+W-Switch between wireframe
+T-toggle texture
+O-change objects
+S-toggle specular
+D-toggle diffuse

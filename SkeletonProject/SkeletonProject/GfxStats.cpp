@@ -28,6 +28,9 @@ GfxStats::GfxStats()
     _tcscpy(fontDesc.FaceName, _T("Times New Roman"));
 
 	HR(D3DXCreateFontIndirect(gd3dDevice, &fontDesc, &mFont));
+	mReflectSpecBlend = 0;
+	mNormalStrength = 0;
+	mSpecularCoefficient = 0;
 }
 
 GfxStats::~GfxStats()
@@ -75,6 +78,36 @@ void GfxStats::setVertexCount(DWORD n)
 	mNumVertices = n;
 }
 
+void GfxStats::setTextureOn(bool on)
+{
+	mTextureOn = on;
+}
+
+void GfxStats::setNormalMappingOn(bool on)
+{
+	mNormalMappingOn = on;
+}
+
+void GfxStats::setReflectionOn(bool on)
+{
+	mReflectionOn = on;
+}
+
+void GfxStats::setReflectSpecBlend(float rsb)
+{
+	mReflectSpecBlend = rsb;
+}
+
+void GfxStats::setNormalStrength(float strength)
+{
+	mNormalStrength = strength;
+}
+
+void GfxStats::setSpecularcoefficient(int co)
+{
+	mSpecularCoefficient = co;
+}
+
 void GfxStats::update(float dt)
 {
 	// Make static so that their values persist accross function calls.
@@ -116,7 +149,14 @@ void GfxStats::display()
 	sprintf(buffer, "Frames Per Second = %.2f\n"
 		"Milliseconds Per Frame = %.4f\n"
 		"Triangle Count = %d\n"
-		"Vertex Count = %d", mFPS, mMilliSecPerFrame, mNumTris, mNumVertices);
+		"Vertex Count = %d\n"
+		"T - Texture: %d\n"
+		"R - Reflection: %d\n"
+		"N - Normal mapping: %d\n"
+		"-/+ - Reflection Specular blend: %.1f\n"
+		"A/S - Strength of Normals: %.1f\n"
+		"1-7 - Specular Coefficient: %d\n", mFPS, mMilliSecPerFrame, mNumTris, mNumVertices, mTextureOn, mReflectionOn, mNormalMappingOn,
+		                                    mReflectSpecBlend, mNormalStrength, mSpecularCoefficient);
 
 	RECT R = {5, 5, 0, 0};
 	HR(mFont->DrawText(0, buffer, -1, &R, DT_NOCLIP, D3DCOLOR_XRGB(0,0,0)));
