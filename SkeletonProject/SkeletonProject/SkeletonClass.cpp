@@ -59,6 +59,9 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 	InitAllVertexDeclarations();
 
+	skyBox = new Sky("cubeMap.dds", 10000);
+	skyBox->Create(gd3dDevice);
+
     // repleace or add to the following object creation
 	m_Objects.push_back(new Cylinder(5, 5, 10, 25, 25));
     m_Objects[0]->Create( gd3dDevice );
@@ -101,6 +104,9 @@ SkeletonClass::~SkeletonClass()
     for ( unsigned int obj=0 ; obj<m_Objects.size() ; obj++ )
         delete m_Objects[obj];
     m_Objects.clear();
+
+	delete skyBox;
+	skyBox = NULL;
 
 	DestroyAllVertexDeclarations();
 }
@@ -221,6 +227,7 @@ void SkeletonClass::drawScene()
 	// Render all the objects
 	if (mPhongOn)
 	{
+		skyBox->RenderPhong(gd3dDevice, mView, mProj, mSpecularOn, mDiffuseOn, mTextureOn);
 		m_Objects[mCurrentObject % m_Objects.size()]->RenderPhong(gd3dDevice, mView, mProj, mSpecularOn, mDiffuseOn, mTextureOn);
 	}
 	else
@@ -308,6 +315,11 @@ void SkeletonClass::input(float dt)
 	if (gDInput->keyPressed(DIK_MINUS))
 	{
 		mReflectSpecBlend -= .1;
+	}
+
+	if (gDInput->keyPressed(DIK_1))
+	{
+		mSpecularCoefficient = 2;
 	}
 }
 

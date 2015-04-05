@@ -15,7 +15,7 @@
 //=============================================================================
 class Sphere : public BaseObject3D
 {
-private:
+protected:
 	float m_radius;
 	int m_sliceCount;
 	int m_stackCount;
@@ -27,7 +27,6 @@ private:
 	int m_indiceCount;
 	int m_triangleCount;
 
-protected:
 	virtual void buildVertexBuffer(IDirect3DDevice9* gd3dDevice);
 	virtual void buildIndexBuffer(IDirect3DDevice9* gd3dDevice);
 	virtual void setTexCoord(IDirect3DDevice9* gd3dDevice);

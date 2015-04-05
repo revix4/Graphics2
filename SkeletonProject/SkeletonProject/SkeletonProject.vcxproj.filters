@@ -19,6 +19,10 @@
       <Filter>3DObjects</Filter>
     </ClCompile>
     <ClCompile Include="BaseMaterial.cpp" />
+    <ClCompile Include="Sky.cpp">
+      <Filter>3DObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DClasses\Vertex.h" />
@@ -40,6 +44,10 @@
       <Filter>3DObjects</Filter>
     </ClInclude>
     <ClInclude Include="BaseMaterial.h" />
+    <ClInclude Include="Sky.h">
+      <Filter>3DObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyMaterial.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="3DObjects">

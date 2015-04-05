@@ -97,6 +97,8 @@
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="GfxStats.cpp" />
     <ClCompile Include="SkeletonClass.cpp" />
+    <ClCompile Include="Sky.cpp" />
+    <ClCompile Include="SkyMaterial.cpp" />
     <ClCompile Include="Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +112,8 @@
     <ClInclude Include="DirectInput.h" />
     <ClInclude Include="GfxStats.h" />
     <ClInclude Include="SkeletonClass.h" />
+    <ClInclude Include="Sky.h" />
+    <ClInclude Include="SkyMaterial.h" />
     <ClInclude Include="Sphere.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
