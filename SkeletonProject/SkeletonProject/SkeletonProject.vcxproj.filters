@@ -23,6 +23,7 @@
       <Filter>3DObjects</Filter>
     </ClCompile>
     <ClCompile Include="SkyMaterial.cpp" />
+    <ClCompile Include="ReflectiveMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DClasses\Vertex.h" />
@@ -48,6 +49,7 @@
       <Filter>3DObjects</Filter>
     </ClInclude>
     <ClInclude Include="SkyMaterial.h" />
+    <ClInclude Include="ReflectiveMaterial.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="3DObjects">
