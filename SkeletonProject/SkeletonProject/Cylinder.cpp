@@ -53,15 +53,22 @@ void Cylinder::Create(IDirect3DDevice9* gd3dDevice)
 	m_materialP->buildFX();
 	m_materialG->buildFX();
 
+	m_NormalMat->setTexture(gd3dDevice, "marble.bmp");
+	m_NormalMat->setNormalMap(gd3dDevice, "floor_nmap.bmp");
+	D3DXCreateEffectFromFileA(gd3dDevice, "NormalMap.fx", 0, 0, 0, 0, &NormalMap, 0);
+	m_NormalMat->ConnectToEffect(NormalMap);
+	m_NormalMat->buildFX();
+
 	D3DXCreateCylinder(gd3dDevice, m_topRadius, m_bottomRadius, m_height, m_sliceCount, m_stackCount, &mesh, 0);
 
 	//buildVertexBuffer(gd3dDevice);
 	//buildIndexBuffer(gd3dDevice);
+	setTBN(gd3dDevice);
 	setTexCoord(gd3dDevice);
 }
 
 //-----------------------------------------------------------------------------
-void Cylinder::RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn)
+void Cylinder::RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean normalMapOn, boolean textureOn, float normalStrength)
 {
 	// Update the statistics singlton class
 	GfxStats::GetInstance()->addVertices(m_verticeCount);
@@ -70,15 +77,21 @@ void Cylinder::RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXM
 	HR(Phong->SetMatrix("matView", &m_World));
 	HR(Phong->SetMatrix("matViewProjection", &(m_World*view*projection)));
 	HR(Phong->SetBool("spec_On", specularOn));
-	HR(Phong->SetBool("diff_On", diffuseOn));
+	HR(Phong->SetBool("diff_On", normalMapOn));
 	HR(Phong->SetBool("tex_On", textureOn));
 
-	unsigned int numPass = 0;
-	HR(Phong->Begin(&numPass, 0));
+	HR(NormalMap->SetMatrix("gWorldInv", &m_World));
+	HR(NormalMap->SetMatrix("gWVP", &(m_World*view*projection)));
+	HR(NormalMap->SetBool("tex_On", textureOn));
+	HR(NormalMap->SetBool("mapping_On", normalMapOn));
+	HR(NormalMap->SetFloat("normalStrength", normalStrength));
+
+	unsigned int numPass = 1;
+	HR(NormalMap->Begin(&numPass, 0));
 
 	for (unsigned int i = 0; i < numPass; i++)
 	{
-		HR(Phong->BeginPass(i));
+		HR(NormalMap->BeginPass(i));
 		HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, D3DWRAP_U));
 
 		// Set the buffers and format
@@ -91,16 +104,16 @@ void Cylinder::RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXM
 		HR(gd3dDevice->SetTransform(D3DTS_VIEW, &view));
 		HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &projection));
 
-		HR(Phong->CommitChanges());
+		HR(NormalMap->CommitChanges());
 
 		// Send to render
 		//HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_verticeCount, 0, m_triangleCount));
 		HR(mesh->DrawSubset(0));
 
 		HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, 0));
-		HR(Phong->EndPass());
+		HR(NormalMap->EndPass());
 	}
-	HR(Phong->End());
+	HR(NormalMap->End());
 }
 
 void Cylinder::RenderGouraud(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn)
@@ -150,6 +163,9 @@ void Cylinder::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos)
 {
 	m_materialG->Update(lightPos, viewPos);
 	m_materialP->Update(lightPos, viewPos);
+
+	D3DXVec3Normalize(&lightPos, &lightPos);
+	m_NormalMat->Update(lightPos, viewPos);
 }
 
 //-----------------------------------------------------------------------------

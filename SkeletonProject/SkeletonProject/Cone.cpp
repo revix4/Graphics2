@@ -29,9 +29,9 @@ void Cone::Create(IDirect3DDevice9* gd3dDevice)
 }
 
 //-----------------------------------------------------------------------------
-void Cone::RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn)
+void Cone::RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn, float normalStrength)
 {
-	Cylinder::RenderPhong(gd3dDevice, view, projection, specularOn, diffuseOn, textureOn);
+	Cylinder::RenderPhong(gd3dDevice, view, projection, specularOn, diffuseOn, textureOn, normalStrength);
 }
 
 void Cone::RenderGouraud(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn)
@@ -42,8 +42,7 @@ void Cone::RenderGouraud(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMAT
 //-----------------------------------------------------------------------------
 void Cone::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos)
 {
-	m_materialG->Update(lightPos, viewPos);
-	m_materialP->Update(lightPos, viewPos);
+	Cylinder::Update(lightPos, viewPos);
 }
 
 //-----------------------------------------------------------------------------

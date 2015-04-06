@@ -96,6 +96,7 @@
     <ClCompile Include="d3dApp.cpp" />
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="GfxStats.cpp" />
+    <ClCompile Include="NormalMapMaterial.cpp" />
     <ClCompile Include="SkeletonClass.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="SkyMaterial.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="d3dUtil.h" />
     <ClInclude Include="DirectInput.h" />
     <ClInclude Include="GfxStats.h" />
+    <ClInclude Include="NormalMapMaterial.h" />
     <ClInclude Include="SkeletonClass.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="SkyMaterial.h" />

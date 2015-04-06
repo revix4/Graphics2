@@ -12,8 +12,9 @@
 #pragma once
 //=============================================================================
 #include <d3dx9.h>
+#include "Vertex.h"
 #include "../BaseMaterial.h"
-
+#include "../NormalMapMaterial.h"
 #include "../d3dUtil.h"
 //=============================================================================
 struct IDirect3DVertexBuffer9;
@@ -36,8 +37,12 @@ protected:
 	ID3DXEffect *Gouraud;
 	ID3DXEffect *Phong;
 
+	ID3DXEffect *NormalMap;
+
 	BaseMaterial *m_materialG;
 	BaseMaterial *m_materialP;
+
+	NormalMapMaterial *m_NormalMat;
 
 protected:
     // Replace the code in the following methods
@@ -51,10 +56,11 @@ public:
 
     // Replace or add to the following code as you progress with the material
     virtual void Create( IDirect3DDevice9* gd3dDevice );
-	virtual void RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn);
+	virtual void RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean normalMapOn, boolean textureOn, float normalStrength);
 	virtual void RenderGouraud(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn);
 	virtual void Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos);
 	void setWorldLocation(D3DXMATRIX world);
+	void setTBN(IDirect3DDevice9* gd3dDevice);
 };
 //=============================================================================
 #endif // _BASE_OBJECT_3D_H

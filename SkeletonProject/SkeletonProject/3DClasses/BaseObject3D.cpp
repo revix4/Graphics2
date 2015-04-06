@@ -19,6 +19,8 @@ BaseObject3D::BaseObject3D(void)
 	m_materialG = new BaseMaterial();
 	m_materialP = new BaseMaterial();
 
+	m_NormalMat = new NormalMapMaterial();
+
     D3DXMatrixIdentity(&m_World);
 
 	mesh = nullptr;
@@ -41,10 +43,8 @@ BaseObject3D::~BaseObject3D(void)
 void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 {
 	HRESULT hr;
-	//m_material->setTexture(gd3dDevice, "stone2.dds");
 	m_materialG->setTexture(gd3dDevice, "marble.bmp");
 	m_materialP->setTexture(gd3dDevice, "marble.bmp");
-	//D3DXCreateTextureFromFile(gd3dDevice, "marble.bmp", &m_texture);
 
 	hr = D3DXCreateEffectFromFileA(gd3dDevice, "Textured_Phong.fx", 0, 0, 0, 0, &Phong, 0);
 	hr = D3DXCreateEffectFromFileA(gd3dDevice, "Textured_Gouraud.fx", 0, 0, 0, 0, &Gouraud, 0);
@@ -53,17 +53,24 @@ void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 	m_materialP->ConnectToEffect(Phong);
 	m_materialP->buildFX();
 
+	m_NormalMat->setTexture(gd3dDevice, "marble.bmp");
+	m_NormalMat->setNormalMap(gd3dDevice, "Wood.dds");
+	hr = D3DXCreateEffectFromFileA(gd3dDevice, "NormalMap.fx", 0, 0, 0, 0, &NormalMap, 0);
+	m_NormalMat->ConnectToEffect(NormalMap);
+	m_NormalMat->buildFX();
+
 	D3DXCreateBox(gd3dDevice, 10, 10, 10, &mesh, 0);
 
     //buildVertexBuffer( gd3dDevice );
     //buildIndexBuffer( gd3dDevice );
 
+	setTBN(gd3dDevice);
 	setTexCoord(gd3dDevice);
 }
 
 //-----------------------------------------------------------------------------
 void BaseObject3D::RenderPhong( IDirect3DDevice9* gd3dDevice,
-    D3DXMATRIX& view, D3DXMATRIX& projection , boolean specularOn, boolean diffuseOn, boolean textureOn)
+	D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean normalMapOn, boolean textureOn, float normalStrength)
 {
     // Update the statistics singlton class
     GfxStats::GetInstance()->addVertices(8);
@@ -72,15 +79,21 @@ void BaseObject3D::RenderPhong( IDirect3DDevice9* gd3dDevice,
 	HR(Phong->SetMatrix("matView", &m_World));
 	HR(Phong->SetMatrix("matViewProjection", &(m_World*view*projection)));
 	HR(Phong->SetBool("spec_On", specularOn));
-	HR(Phong->SetBool("diff_On", diffuseOn));
+	HR(Phong->SetBool("diff_On", normalMapOn));
 	HR(Phong->SetBool("tex_On", textureOn));
 
+	HR(NormalMap->SetMatrix("gWorldInv", &m_World));
+	HR(NormalMap->SetMatrix("gWVP", &(m_World*view*projection)));
+	HR(NormalMap->SetBool("tex_On", textureOn));
+	HR(NormalMap->SetBool("mapping_On", normalMapOn));
+	HR(NormalMap->SetFloat("normalStrength", normalStrength));
+
 	unsigned int numPass = 0;
-	HR(Phong->Begin(&numPass, 0));
+	HR(NormalMap->Begin(&numPass, 0));
 
 	for (unsigned int i = 0; i < numPass; i++)
 	{
-		HR(Phong->BeginPass(i));
+		HR(NormalMap->BeginPass(i));
 
 		// Set the buffers and format
 		//HR(gd3dDevice->SetStreamSource(0, m_VertexBuffer, 0, sizeof(VertexPos)));
@@ -92,16 +105,16 @@ void BaseObject3D::RenderPhong( IDirect3DDevice9* gd3dDevice,
 		HR(gd3dDevice->SetTransform(D3DTS_VIEW, &view));
 		HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &projection));
 
-		HR(Phong->CommitChanges());
+		HR(NormalMap->CommitChanges());
 
 		// Send to render
 		//HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12));
 		HR(mesh->DrawSubset(0));
 		
 
-		HR(Phong->EndPass());
+		HR(NormalMap->EndPass());
 	}
-	HR(Phong->End());
+	HR(NormalMap->End());
 }
 
 void BaseObject3D::RenderGouraud(IDirect3DDevice9* gd3dDevice,
@@ -156,6 +169,9 @@ void BaseObject3D::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos)
 {
 	m_materialG->Update(lightPos, viewPos);
 	m_materialP->Update(lightPos, viewPos);
+
+	D3DXVec3Normalize(&lightPos, &lightPos);
+	m_NormalMat->Update(lightPos, viewPos);
 }
 
 //-----------------------------------------------------------------------------
@@ -287,5 +303,36 @@ void BaseObject3D::setTexCoord(IDirect3DDevice9* gd3dDevice)
 	ReleaseCOM(temp);
 }
 
-//void 
-//=============================================================================
+void BaseObject3D::setTBN(IDirect3DDevice9* gd3dDevice)
+{
+	//Credit to Vincent Loignon
+	// Grab our vertex description
+	D3DVERTEXELEMENT9 elements[64];
+	UINT numElements = 0;
+	VertexPos::Decl->GetDeclaration(elements, &numElements);
+
+	// Create a copy of our sphere mesh using our vertex description instead of the old one
+	ID3DXMesh* temp = 0;
+	HR(mesh->CloneMesh(D3DXMESH_MANAGED, elements, gd3dDevice, &temp));
+
+	// Release our old mesh since we have a copy we will be modifying in system memory
+	ReleaseCOM(mesh);
+
+	HR(D3DXComputeTangentFrameEx(
+		temp, // Input mesh
+		D3DDECLUSAGE_TEXCOORD, 0, // Vertex element of input tex-coords.  
+		D3DDECLUSAGE_BINORMAL, 0, // Vertex element to output binormal.
+		D3DDECLUSAGE_TANGENT, 0,  // Vertex element to output tangent.
+		D3DDECLUSAGE_NORMAL, 0,   // Vertex element to output normal.
+		0, // Options
+		0, // Adjacency
+		0.01f, 0.25f, 0.01f, // Thresholds for handling errors
+		&mesh, // Output mesh
+		0));         // Vertex Remapping
+
+	// Clone the copy of the mesh back into the member variable with hardware friendly tags
+	//HR(temp->CloneMesh(D3DXMESH_MANAGED | D3DXMESH_WRITEONLY, elements, gd3dDevice, &m_Mesh));
+
+	// Release our local copy since we no longer need it
+	ReleaseCOM(temp);
+}

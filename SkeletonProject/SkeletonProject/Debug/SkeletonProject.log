@@ -1,30 +1,12 @@
-﻿Build started 4/4/2015 10:52:27 PM.
+﻿Build started 4/6/2015 12:45:39 AM.
      1>Project "C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\SkeletonProject.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt 3DClasses\BaseObject3D.cpp 3DClasses\Vertex.cpp BaseMaterial.cpp Cone.cpp Cylinder.cpp DirectInput.cpp GfxStats.cpp SkeletonClass.cpp Sky.cpp SkyMaterial.cpp Sphere.cpp d3dApp.cpp
-         d3dApp.cpp
-         Sphere.cpp
-         SkyMaterial.cpp
-         GfxStats.cpp
-     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\gfxstats.cpp(28): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\string.h(112) : see declaration of 'strcpy'
-     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\gfxstats.cpp(159): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356) : see declaration of 'sprintf'
-         DirectInput.cpp
-         Cylinder.cpp
-         Cone.cpp
-         BaseMaterial.cpp
-         Vertex.cpp
-         BaseObject3D.cpp
-         Generating Code...
-         Compiling...
-         Sky.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt SkeletonClass.cpp
          SkeletonClass.cpp
-     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\skeletonclass.cpp(304): warning C4305: '+=' : truncation from 'double' to 'float'
-     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\skeletonclass.cpp(308): warning C4305: '-=' : truncation from 'double' to 'float'
-     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\skeletonclass.cpp(313): warning C4305: '+=' : truncation from 'double' to 'float'
-     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\skeletonclass.cpp(317): warning C4305: '-=' : truncation from 'double' to 'float'
-         Generating Code...
+     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\skeletonclass.cpp(302): warning C4305: '+=' : truncation from 'double' to 'float'
+     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\skeletonclass.cpp(306): warning C4305: '-=' : truncation from 'double' to 'float'
+     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\skeletonclass.cpp(311): warning C4305: '+=' : truncation from 'double' to 'float'
+     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\skeletonclass.cpp(315): warning C4305: '-=' : truncation from 'double' to 'float'
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\Debug\SkeletonProject.exe" /INCREMENTAL /NOLOGO d3d9.lib d3dx9d.lib dxguid.lib DxErr.lib dinput8.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\Debug\SkeletonProject.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\Debug\SkeletonProject.lib" /MACHINE:X86 /SAFESEH Debug\BaseObject3D.obj
          Debug\Vertex.obj
@@ -34,6 +16,7 @@
          Debug\d3dApp.obj
          Debug\DirectInput.obj
          Debug\GfxStats.obj
+         Debug\NormalMapMaterial.obj
          Debug\SkeletonClass.obj
          Debug\Sky.obj
          Debug\SkyMaterial.obj
@@ -43,4 +26,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:06.88
+Time Elapsed 00:00:00.88

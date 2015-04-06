@@ -90,7 +90,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	mPhongOn = true;
 
 	mReflectSpecBlend = 0;
-	mNormalStrength = 0;
+	mNormalStrength = 0.7f;
 	mSpecularCoefficient = 2;
 	GfxStats::GetInstance()->setSpecularcoefficient(mSpecularCoefficient);
 
@@ -228,7 +228,7 @@ void SkeletonClass::drawScene()
 	if (mPhongOn)
 	{
 		skyBox->RenderPhong(gd3dDevice, mView, mProj, mSpecularOn, mDiffuseOn, mTextureOn);
-		m_Objects[mCurrentObject % m_Objects.size()]->RenderPhong(gd3dDevice, mView, mProj, mSpecularOn, mDiffuseOn, mTextureOn);
+		m_Objects[mCurrentObject % m_Objects.size()]->RenderPhong(gd3dDevice, mView, mProj, mSpecularOn, mNormalMappingOn, mTextureOn, mNormalStrength);
 	}
 	else
 	{
@@ -285,8 +285,6 @@ void SkeletonClass::input(float dt)
 		mCurrentObject++;
 	if (gDInput->keyPressed(DIK_D))
 		mDiffuseOn = !mDiffuseOn;
-	if (gDInput->keyPressed(DIK_P))
-		mPhongOn = !mPhongOn;
 
 	if (gDInput->keyPressed(DIK_R))
 	{
@@ -321,6 +319,31 @@ void SkeletonClass::input(float dt)
 	{
 		mSpecularCoefficient = 2;
 	}
+	if (gDInput->keyPressed(DIK_2))
+	{
+		mSpecularCoefficient = 4;
+	}
+	if (gDInput->keyPressed(DIK_3))
+	{
+		mSpecularCoefficient = 8;
+	}
+	if (gDInput->keyPressed(DIK_4))
+	{
+		mSpecularCoefficient = 16;
+	}
+	if (gDInput->keyPressed(DIK_5))
+	{
+		mSpecularCoefficient = 32;
+	}
+	if (gDInput->keyPressed(DIK_6))
+	{
+		mSpecularCoefficient = 64;
+	}
+	if (gDInput->keyPressed(DIK_7))
+	{
+		mSpecularCoefficient = 128;
+	}
+	GfxStats::GetInstance()->setSpecularcoefficient(mSpecularCoefficient);
 }
 
 void SkeletonClass::buildProjMtx()
