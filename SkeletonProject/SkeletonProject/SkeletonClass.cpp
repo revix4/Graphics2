@@ -53,7 +53,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 		PostQuitMessage(0);
 	}
 
-	mCameraRadius    = 50.0f;
+	mCameraRadius    = 500.0f;
 	mCameraRotationY = 1.75f * D3DX_PI;
 	mCameraRotationX = 1.75f * D3DX_PI;
 
@@ -63,19 +63,31 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	skyBox->Create(gd3dDevice);
 
     // repleace or add to the following object creation
-	m_Objects.push_back(new Cylinder(5, 5, 10, 25, 25));
-    m_Objects[0]->Create( gd3dDevice );
-
-	m_Objects.push_back(new Sphere(5, 25, 25));
+	//sun
+	m_Objects.push_back(new Sphere(50, 25, 25));
+	m_Objects[0]->Create(gd3dDevice);
+	//planets
+	m_Objects.push_back(new Sphere(10, 25, 25));
 	m_Objects[1]->Create(gd3dDevice);
+	int x = 100;
+	int y = 0;
+	int z = 0;
+	D3DXMATRIX translation = D3DXMATRIX(1,0,0,x,0,1,0,y,0,0,1,z,0,0,0,1);
+	m_Objects[1]->setWorldLocation(translation);
 
-	m_Objects.push_back(new Cone(5,10,25));
+	m_Objects.push_back(new Sphere(10, 25, 25));
 	m_Objects[2]->Create(gd3dDevice);
+	translation = D3DXMATRIX(1, 0, 0, -x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1);
+	m_Objects[2]->setWorldLocation(translation);
 
-	m_Objects.push_back(new BaseObject3D());
+	m_Objects.push_back(new Sphere(9, 25, 25));
 	m_Objects[3]->Create(gd3dDevice);
+	x = 0;
+	z = 150;
+	translation = D3DXMATRIX(1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1);
+	m_Objects[3]->setWorldLocation(translation);
 
-	mLightPos = D3DXVECTOR3(50, 100, 1);
+	mLightPos = D3DXVECTOR3(0, 0, 0);
 
 	mWireFrameOn = false;
 	mTextureOn = true;
@@ -89,7 +101,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	mDiffuseOn = true;
 	mPhongOn = true;
 
-	mReflectSpecBlend = 0;
+	mReflectSpecBlend = 1;
 	mNormalStrength = 0.7f;
 	mSpecularCoefficient = 2;
 	GfxStats::GetInstance()->setSpecularcoefficient(mSpecularCoefficient);
@@ -153,9 +165,6 @@ void SkeletonClass::updateScene(float dt)
 
 	input(dt);
 
-	if (mCurrentObject == m_Objects.size())
-		mCurrentObject = 0;
-
 	//if we go above 360 or below 0, wrap around
 	if (mCameraRotationX > 2 * D3DX_PI)
 		mCameraRotationX = 0;
@@ -203,7 +212,11 @@ void SkeletonClass::updateScene(float dt)
 
 	//D3DXMATRIX mViewInv;
 	//D3DXMatrixTranspose(&mViewInv, &mView);
-	m_Objects[mCurrentObject % m_Objects.size()]->Update(mLightPos, D3DXVECTOR3(mView._41, mView._42, mView._43));
+	//m_Objects[mCurrentObject % m_Objects.size()]->Update(mLightPos, D3DXVECTOR3(mView._41, mView._42, mView._43), mSpecularCoefficient);
+	for each(BaseObject3D* object in m_Objects)
+	{
+		object->Update(mLightPos, D3DXVECTOR3(mView._41, mView._42, mView._43), mSpecularCoefficient);
+	}
 }
 
 
@@ -225,15 +238,12 @@ void SkeletonClass::drawScene()
 	}
 
 	// Render all the objects
-	if (mPhongOn)
+	skyBox->RenderPhong(gd3dDevice, mView, mProj, mSpecularOn, mDiffuseOn, mTextureOn);
+	for each(BaseObject3D* object in m_Objects)
 	{
-		skyBox->RenderPhong(gd3dDevice, mView, mProj, mSpecularOn, mDiffuseOn, mTextureOn);
-		m_Objects[mCurrentObject % m_Objects.size()]->RenderPhong(gd3dDevice, mView, mProj, mSpecularOn, mNormalMappingOn, mTextureOn, mNormalStrength);
+		object->RenderPhong(gd3dDevice, mView, mProj, mSpecularOn, mNormalMappingOn, mTextureOn, mNormalStrength, mReflectSpecBlend);
 	}
-	else
-	{
-		m_Objects[mCurrentObject % m_Objects.size()]->RenderGouraud(gd3dDevice, mView, mProj, mSpecularOn, mDiffuseOn, mTextureOn);
-	}
+	//m_Objects[mCurrentObject % m_Objects.size()]->RenderPhong(gd3dDevice, mView, mProj, mSpecularOn, mNormalMappingOn, mTextureOn, mNormalStrength, mReflectSpecBlend);
 
 	// display the render statistics
 	GfxStats::GetInstance()->display();
@@ -281,8 +291,6 @@ void SkeletonClass::input(float dt)
 		mTextureOn = !mTextureOn;
 		GfxStats::GetInstance()->setTextureOn(mTextureOn);
 	}
-	if (gDInput->keyPressed(DIK_O))
-		mCurrentObject++;
 	if (gDInput->keyPressed(DIK_D))
 		mDiffuseOn = !mDiffuseOn;
 

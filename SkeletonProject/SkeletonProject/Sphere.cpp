@@ -22,8 +22,6 @@ Sphere::Sphere(float radius, int sliceCount, int stackCount)
 	m_triangleCount = 2 * (m_stackCount*m_sliceCount);
 
 	color = D3DCOLOR(D3DCOLOR_XRGB(0, 0, 255));
-
-	m_reflMat = new ReflectiveMaterial();
 }
 
 //-----------------------------------------------------------------------------
@@ -40,22 +38,19 @@ void Sphere::Create(IDirect3DDevice9* gd3dDevice)
 {
 	//m_material->setTexture(gd3dDevice, "stone2.dds");
 	//m_materialG->setTexture(gd3dDevice, "marble.bmp");
-	//m_materialP->setTexture(gd3dDevice, "marble.bmp");
-	m_reflMat->setTexture(gd3dDevice, "marble.bmp");
-	m_reflMat->setEnvMap(gd3dDevice, "grassenvmap1024.dds");
+	m_materialP->setTexture(gd3dDevice, "marble.bmp");
 
-	//D3DXCreateEffectFromFileA(gd3dDevice, "Textured_Phong.fx", 0, 0, 0, 0, &Phong, 0);
-	D3DXCreateEffectFromFileA(gd3dDevice, "EnvMap.fx", 0, 0, 0, 0, &Phong, 0);
+
+	D3DXCreateEffectFromFileA(gd3dDevice, "Textured_Phong.fx", 0, 0, 0, 0, &Phong, 0);
+	
 	//D3DXCreateEffectFromFileA(gd3dDevice, "Textured_Gouraud.fx", 0, 0, 0, 0, &Gouraud, 0);
 	//m_materialG->ConnectToEffect(Gouraud);
-	//m_materialP->ConnectToEffect(Phong);
-	m_reflMat->ConnectToEffect(Phong);
-
+	m_materialP->ConnectToEffect(Phong);
 
 
 	//m_materialG->buildFX();
-	//m_materialP->buildFX();
-	m_reflMat->buildFX();
+	m_materialP->buildFX();
+
 
 	D3DXCreateSphere(gd3dDevice, m_radius, m_sliceCount, m_stackCount, &mesh, 0);
 
@@ -65,19 +60,18 @@ void Sphere::Create(IDirect3DDevice9* gd3dDevice)
 }
 
 //-----------------------------------------------------------------------------
-void Sphere::RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn, float normalStrength)
+void Sphere::RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn, float normalStrength, float reflectivity)
 {
 	// Update the statistics singlton class
 	GfxStats::GetInstance()->addVertices(m_verticeCount);
 	GfxStats::GetInstance()->addTriangles(m_triangleCount);//how many triangles are there?
 
-	HR(Phong->SetMatrix("gWorld", &m_World));
+	HR(Phong->SetMatrix("matView", &m_World));
 	//since the inverse is the same in our example, we just set it to m_World instead
-	HR(Phong->SetMatrix("gWorldInvTrans", &m_World));
-	HR(Phong->SetMatrix("gWVP", &(m_World*view*projection)));
-	//HR(Phong->SetBool("spec_On", specularOn));
-	//HR(Phong->SetBool("diff_On", diffuseOn));
-	//HR(Phong->SetBool("tex_On", textureOn));
+	HR(Phong->SetMatrix("matViewProjection", &(m_World*view*projection)));
+	HR(Phong->SetBool("spec_On", specularOn));
+	HR(Phong->SetBool("diff_On", true));
+	HR(Phong->SetBool("tex_On", textureOn));
 
 	unsigned int numPass = 0;
 	HR(Phong->Begin(&numPass, 0));
@@ -152,11 +146,11 @@ void Sphere::RenderGouraud(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXM
 }
 
 //-----------------------------------------------------------------------------
-void Sphere::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos)
+void Sphere::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos, float shine)
 {
 	//m_materialG->Update(lightPos, viewPos);
-	//m_materialP->Update(lightPos, viewPos);
-	m_reflMat->Update(lightPos, viewPos);
+	m_materialP->Update(lightPos, viewPos);
+
 }
 
 //-----------------------------------------------------------------------------

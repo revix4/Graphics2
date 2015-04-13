@@ -26,8 +26,8 @@ public:
 
 	virtual void Create(IDirect3DDevice9* gd3dDevice);
 	virtual void RenderGouraud(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn);
-	virtual void RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn, float normalStrength);
-	virtual void Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos);
+	virtual void RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn, float normalStrength, float reflectivity);
+	virtual void Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos, float shine = 0);
 };
 
 #endif

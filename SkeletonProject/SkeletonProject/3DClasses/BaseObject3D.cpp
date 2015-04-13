@@ -26,6 +26,8 @@ BaseObject3D::BaseObject3D(void)
 	mesh = nullptr;
 	Gouraud = nullptr;
 	Phong = nullptr;
+
+	m_reflMat = new ReflectiveMaterial();
 }
 
 //-----------------------------------------------------------------------------
@@ -43,21 +45,27 @@ BaseObject3D::~BaseObject3D(void)
 void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 {
 	HRESULT hr;
-	m_materialG->setTexture(gd3dDevice, "marble.bmp");
-	m_materialP->setTexture(gd3dDevice, "marble.bmp");
+	//m_materialG->setTexture(gd3dDevice, "marble.bmp");
+	//m_materialP->setTexture(gd3dDevice, "marble.bmp");
 
-	hr = D3DXCreateEffectFromFileA(gd3dDevice, "Textured_Phong.fx", 0, 0, 0, 0, &Phong, 0);
-	hr = D3DXCreateEffectFromFileA(gd3dDevice, "Textured_Gouraud.fx", 0, 0, 0, 0, &Gouraud, 0);
-	m_materialG->ConnectToEffect(Gouraud);
-	m_materialG->buildFX();
-	m_materialP->ConnectToEffect(Phong);
-	m_materialP->buildFX();
+	//hr = D3DXCreateEffectFromFileA(gd3dDevice, "Textured_Phong.fx", 0, 0, 0, 0, &Phong, 0);
+	//hr = D3DXCreateEffectFromFileA(gd3dDevice, "Textured_Gouraud.fx", 0, 0, 0, 0, &Gouraud, 0);
+	//m_materialG->ConnectToEffect(Gouraud);
+	//m_materialG->buildFX();
+	//m_materialP->ConnectToEffect(Phong);
+	//m_materialP->buildFX();
 
-	m_NormalMat->setTexture(gd3dDevice, "marble.bmp");
-	m_NormalMat->setNormalMap(gd3dDevice, "Wood.dds");
-	hr = D3DXCreateEffectFromFileA(gd3dDevice, "NormalMap.fx", 0, 0, 0, 0, &NormalMap, 0);
-	m_NormalMat->ConnectToEffect(NormalMap);
-	m_NormalMat->buildFX();
+	//m_NormalMat->setTexture(gd3dDevice, "marble.bmp");
+	//m_NormalMat->setNormalMap(gd3dDevice, "Wood.dds");
+	//hr = D3DXCreateEffectFromFileA(gd3dDevice, "NormalMap.fx", 0, 0, 0, 0, &NormalMap, 0);
+	//m_NormalMat->ConnectToEffect(NormalMap);
+	//m_NormalMat->buildFX();
+
+	m_reflMat->setTexture(gd3dDevice, "marble.bmp");
+	m_reflMat->setEnvMap(gd3dDevice, "grassenvmap1024.dds");
+	D3DXCreateEffectFromFileA(gd3dDevice, "EnvMap.fx", 0, 0, 0, 0, &Phong, 0);
+	m_reflMat->ConnectToEffect(Phong);
+	m_reflMat->buildFX();
 
 	D3DXCreateBox(gd3dDevice, 10, 10, 10, &mesh, 0);
 
@@ -70,30 +78,37 @@ void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 
 //-----------------------------------------------------------------------------
 void BaseObject3D::RenderPhong( IDirect3DDevice9* gd3dDevice,
-	D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean normalMapOn, boolean textureOn, float normalStrength)
+	D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean normalMapOn, boolean textureOn, float normalStrength, float reflectivity)
 {
     // Update the statistics singlton class
     GfxStats::GetInstance()->addVertices(8);
     GfxStats::GetInstance()->addTriangles(12);
 
-	HR(Phong->SetMatrix("matView", &m_World));
-	HR(Phong->SetMatrix("matViewProjection", &(m_World*view*projection)));
-	HR(Phong->SetBool("spec_On", specularOn));
-	HR(Phong->SetBool("diff_On", normalMapOn));
-	HR(Phong->SetBool("tex_On", textureOn));
+	//HR(Phong->SetMatrix("matView", &m_World));
+	//HR(Phong->SetMatrix("matViewProjection", &(m_World*view*projection)));
+	//HR(Phong->SetBool("spec_On", specularOn));
+	//HR(Phong->SetBool("diff_On", normalMapOn));
+	//HR(Phong->SetBool("tex_On", textureOn));
 
-	HR(NormalMap->SetMatrix("gWorldInv", &m_World));
-	HR(NormalMap->SetMatrix("gWVP", &(m_World*view*projection)));
-	HR(NormalMap->SetBool("tex_On", textureOn));
-	HR(NormalMap->SetBool("mapping_On", normalMapOn));
-	HR(NormalMap->SetFloat("normalStrength", normalStrength));
+	//HR(NormalMap->SetMatrix("gWorldInv", &m_World));
+	//HR(NormalMap->SetMatrix("gWVP", &(m_World*view*projection)));
+	//HR(NormalMap->SetBool("tex_On", textureOn));
+	//HR(NormalMap->SetBool("mapping_On", normalMapOn));
+	//HR(NormalMap->SetFloat("normalStrength", normalStrength));
+
+	HR(Phong->SetMatrix("gWorld", &m_World));
+	//since the inverse is the same in our example, we just set it to m_World instead
+	HR(Phong->SetMatrix("gWorldInvTrans", &m_World));
+	HR(Phong->SetMatrix("gWVP", &(m_World*view*projection)));
+
+	HR(Phong->SetFloat("gReflectivity", reflectivity));
 
 	unsigned int numPass = 0;
-	HR(NormalMap->Begin(&numPass, 0));
+	HR(Phong->Begin(&numPass, 0));
 
 	for (unsigned int i = 0; i < numPass; i++)
 	{
-		HR(NormalMap->BeginPass(i));
+		HR(Phong->BeginPass(i));
 
 		// Set the buffers and format
 		//HR(gd3dDevice->SetStreamSource(0, m_VertexBuffer, 0, sizeof(VertexPos)));
@@ -105,16 +120,16 @@ void BaseObject3D::RenderPhong( IDirect3DDevice9* gd3dDevice,
 		HR(gd3dDevice->SetTransform(D3DTS_VIEW, &view));
 		HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &projection));
 
-		HR(NormalMap->CommitChanges());
+		HR(Phong->CommitChanges());
 
 		// Send to render
 		//HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12));
 		HR(mesh->DrawSubset(0));
 		
 
-		HR(NormalMap->EndPass());
+		HR(Phong->EndPass());
 	}
-	HR(NormalMap->End());
+	HR(Phong->End());
 }
 
 void BaseObject3D::RenderGouraud(IDirect3DDevice9* gd3dDevice,
@@ -165,13 +180,15 @@ void BaseObject3D::setWorldLocation(D3DXMATRIX transform)
 }
 
 //-----------------------------------------------------------------------------
-void BaseObject3D::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos)
+void BaseObject3D::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos, float shine)
 {
-	m_materialG->Update(lightPos, viewPos);
-	m_materialP->Update(lightPos, viewPos);
+	//m_materialG->Update(lightPos, viewPos);
+	//m_materialP->Update(lightPos, viewPos);
 
-	D3DXVec3Normalize(&lightPos, &lightPos);
-	m_NormalMat->Update(lightPos, viewPos);
+	//D3DXVec3Normalize(&lightPos, &lightPos);
+	//m_NormalMat->Update(lightPos, viewPos);
+
+	m_reflMat->Update(lightPos, viewPos, shine);
 }
 
 //-----------------------------------------------------------------------------

@@ -68,7 +68,7 @@ void Cylinder::Create(IDirect3DDevice9* gd3dDevice)
 }
 
 //-----------------------------------------------------------------------------
-void Cylinder::RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean normalMapOn, boolean textureOn, float normalStrength)
+void Cylinder::RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean normalMapOn, boolean textureOn, float normalStrength, float reflectivity)
 {
 	// Update the statistics singlton class
 	GfxStats::GetInstance()->addVertices(m_verticeCount);
@@ -159,7 +159,7 @@ void Cylinder::RenderGouraud(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3D
 }
 
 //-----------------------------------------------------------------------------
-void Cylinder::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos)
+void Cylinder::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos, float shine)
 {
 	m_materialG->Update(lightPos, viewPos);
 	m_materialP->Update(lightPos, viewPos);

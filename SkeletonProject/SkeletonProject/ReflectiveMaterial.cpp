@@ -5,11 +5,11 @@ ReflectiveMaterial::ReflectiveMaterial()
 	m_DiffuseColor = D3DXVECTOR4(0.65,0.65,0.65,1);
 	m_SpecularColor = D3DXVECTOR4(0.15,0.15,0.15,1);
 	m_AmbientColor = D3DXVECTOR4(0.2,0.2,0.2,1);
-	m_Shininess = 1;
+	m_Shininess = 2;
 
-	m_LightDiffuseColor = D3DXVECTOR4(1, 1, 1, 1);
-	m_LightSpecularColor = D3DXVECTOR4(1, 1, 1, 1);
-	m_LightAmbientColor = D3DXVECTOR4(1, 1, 1, 1);
+	m_LightDiffuseColor = D3DXVECTOR4(.5f, .5f, .5f, 1);
+	m_LightSpecularColor = D3DXVECTOR4(.5f, .5f, .5f, 1);
+	m_LightAmbientColor = D3DXVECTOR4(.5f, .5f, .5f, 1);
 
 
 }
@@ -64,8 +64,10 @@ void ReflectiveMaterial::setEnvMap(IDirect3DDevice9* gd3dDevice, LPCSTR filename
 	HR(D3DXCreateTextureFromFile(gd3dDevice, filename, &m_envMap));
 }
 
-void ReflectiveMaterial::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos)
+void ReflectiveMaterial::Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos, float shine)
 {
 	HR(m_Effect->SetValue(m_LightPosWHandle, lightPos, sizeof(float) * 3));
 	HR(m_Effect->SetValue(m_ViewerPosWHandle, viewPos, sizeof(float) * 3));
+	m_Shininess = shine / 10;
+	HR(m_Effect->SetFloat(m_ShininessHandle, m_Shininess));
 }

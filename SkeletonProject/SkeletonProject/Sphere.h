@@ -12,7 +12,6 @@
 #pragma once
 //=============================================================================
 #include "3DClasses\BaseObject3D.h"
-#include "ReflectiveMaterial.h"
 //=============================================================================
 class Sphere : public BaseObject3D
 {
@@ -32,16 +31,14 @@ protected:
 	virtual void buildIndexBuffer(IDirect3DDevice9* gd3dDevice);
 	virtual void setTexCoord(IDirect3DDevice9* gd3dDevice);
 
-	ReflectiveMaterial* m_reflMat;
-
 public:
 	Sphere(float radius, int sliceCount, int stackCount);
 	~Sphere();
 
 	virtual void Create(IDirect3DDevice9* gd3dDevice);
 	virtual void RenderGouraud(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn);
-	virtual void RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn, float normalStrength);
-	virtual void Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos);
+	virtual void RenderPhong(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, boolean specularOn, boolean diffuseOn, boolean textureOn, float normalStrength, float reflectivity);
+	virtual void Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos, float shine = 0);
 };
 
 #endif

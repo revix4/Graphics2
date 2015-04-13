@@ -24,6 +24,7 @@
     </ClCompile>
     <ClCompile Include="SkyMaterial.cpp" />
     <ClCompile Include="NormalMapMaterial.cpp" />
+    <ClCompile Include="ReflectiveMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DClasses\Vertex.h" />
@@ -50,6 +51,7 @@
     </ClInclude>
     <ClInclude Include="SkyMaterial.h" />
     <ClInclude Include="NormalMapMaterial.h" />
+    <ClInclude Include="ReflectiveMaterial.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="3DObjects">

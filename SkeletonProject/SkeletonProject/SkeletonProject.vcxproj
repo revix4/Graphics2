@@ -97,6 +97,7 @@
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="GfxStats.cpp" />
     <ClCompile Include="NormalMapMaterial.cpp" />
+    <ClCompile Include="ReflectiveMaterial.cpp" />
     <ClCompile Include="SkeletonClass.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="SkyMaterial.cpp" />
@@ -113,6 +114,7 @@
     <ClInclude Include="DirectInput.h" />
     <ClInclude Include="GfxStats.h" />
     <ClInclude Include="NormalMapMaterial.h" />
+    <ClInclude Include="ReflectiveMaterial.h" />
     <ClInclude Include="SkeletonClass.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="SkyMaterial.h" />

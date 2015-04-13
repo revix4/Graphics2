@@ -1,9 +1,16 @@
-﻿Build started 3/28/2015 9:09:06 PM.
+﻿Build started 4/11/2015 9:03:20 PM.
      1>Project "C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\SkeletonProject.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _MBCS /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt SkeletonClass.cpp
          SkeletonClass.cpp
-     1>SkeletonClass.cpp(280): warning C4244: '+=' : conversion from 'double' to 'int', possible loss of data
+     1>SkeletonClass.cpp(75): warning C4244: 'argument' : conversion from 'int' to 'FLOAT', possible loss of data
+     1>SkeletonClass.cpp(80): warning C4244: 'argument' : conversion from 'int' to 'FLOAT', possible loss of data
+     1>SkeletonClass.cpp(87): warning C4244: 'argument' : conversion from 'int' to 'FLOAT', possible loss of data
+     1>SkeletonClass.cpp(218): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>SkeletonClass.cpp(310): warning C4305: '+=' : truncation from 'double' to 'float'
+     1>SkeletonClass.cpp(314): warning C4305: '-=' : truncation from 'double' to 'float'
+     1>SkeletonClass.cpp(319): warning C4305: '+=' : truncation from 'double' to 'float'
+     1>SkeletonClass.cpp(323): warning C4305: '-=' : truncation from 'double' to 'float'
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\Release\SkeletonProject.exe" /INCREMENTAL /NOLOGO d3d9.lib d3dx9d.lib dxguid.lib DxErr.lib dinput8.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\Release\SkeletonProject.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\Release\SkeletonProject.lib" /MACHINE:X86 /SAFESEH Release\BaseObject3D.obj
          Release\Vertex.obj
@@ -13,7 +20,11 @@
          Release\d3dApp.obj
          Release\DirectInput.obj
          Release\GfxStats.obj
+         Release\NormalMapMaterial.obj
+         Release\ReflectiveMaterial.obj
          Release\SkeletonClass.obj
+         Release\Sky.obj
+         Release\SkyMaterial.obj
          Release\Sphere.obj
      1>LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
          Generating code
@@ -23,4 +34,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.20
+Time Elapsed 00:00:01.22

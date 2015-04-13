@@ -41,7 +41,8 @@ uniform extern texture  gEnvMap;
 
 // How much does the surface reflect?  Normally this should be a
 // property of the material since it may vary over a surface.
-static float gReflectivity = 1.0f;
+uniform extern float gReflectivity;
+uniform extern bool gReflectOn;
 
 
 sampler TexS = sampler_state
@@ -100,6 +101,11 @@ float4 EnvMapPS(float3 normalW : TEXCOORD0,
                 float3 toEyeW  : TEXCOORD1, 
                 float2 tex0    : TEXCOORD2) : COLOR
 {
+	//if (!gReflectOn)
+	//{
+	//	gReflectivity = 0;
+	//}
+
 	// Interpolated normals can become unnormal--so normalize.
 	normalW = normalize(normalW);
 	toEyeW  = normalize(toEyeW);

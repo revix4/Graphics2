@@ -23,5 +23,5 @@ public:
 	ReflectiveMaterial();
 	void buildFX();
 	void setEnvMap(IDirect3DDevice9* gd3dDevice, LPCSTR filename);
-	void Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos);
+	void Update(D3DXVECTOR3 lightPos, D3DXVECTOR3 viewPos, float shine = 0);
 };
