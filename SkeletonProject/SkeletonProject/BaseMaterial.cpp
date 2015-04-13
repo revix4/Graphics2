@@ -14,10 +14,10 @@ BaseMaterial::BaseMaterial(void)
     m_Effect = NULL;
 	m_texture = NULL;
 
-	m_Shininess = 128.0f;
-	m_DiffuseColor = D3DXVECTOR4(0.65f, 0.65f, 0.65f, 1.0f);
-	m_SpecularColor = D3DXVECTOR4(0.15f, 0.15f, 0.15f, 1.0f);
-	m_AmbientColor = D3DXVECTOR4(0.2f, 0.2f, 0.2f, 1.0f);
+	m_Shininess = 0.7f;
+	m_DiffuseColor = D3DXVECTOR4(0.66f, 0.66f, 0.66f, 1.0f);
+	m_SpecularColor = D3DXVECTOR4(1.0f, 0.5f, 0.5f, 1.0f);
+	m_AmbientColor = D3DXVECTOR4(0.69f, 0.69f, 0.69f, 1.0f);
 
 
 }
