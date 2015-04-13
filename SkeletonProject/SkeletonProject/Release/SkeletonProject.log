@@ -1,24 +1,55 @@
-﻿Build started 4/13/2015 3:00:09 PM.
+﻿Build started 4/13/2015 3:09:07 PM.
      1>Project "C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\SkeletonProject.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _MBCS /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt 3DClasses\BaseObject3D.cpp BaseMaterial.cpp Cone.cpp Cylinder.cpp NormalMapMaterial.cpp SkeletonClass.cpp Sky.cpp Sphere.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _MBCS /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt 3DClasses\BaseObject3D.cpp 3DClasses\Vertex.cpp BaseMaterial.cpp Cone.cpp Cylinder.cpp d3dApp.cpp DirectInput.cpp GfxStats.cpp NormalMapMaterial.cpp ReflectiveMaterial.cpp SkeletonClass.cpp Sky.cpp SkyMaterial.cpp Sphere.cpp
          BaseObject3D.cpp
-     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\3dclasses\BaseObject3D.h(17): fatal error C1083: Cannot open include file: '../NormalMapMaterial.h': No such file or directory
+     1>3DClasses\BaseObject3D.cpp(47): warning C4101: 'hr' : unreferenced local variable
+         Vertex.cpp
          BaseMaterial.cpp
          Cone.cpp
-     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\3DClasses\BaseObject3D.h(17): fatal error C1083: Cannot open include file: '../NormalMapMaterial.h': No such file or directory
          Cylinder.cpp
-     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\3DClasses\BaseObject3D.h(17): fatal error C1083: Cannot open include file: '../NormalMapMaterial.h': No such file or directory
+         d3dApp.cpp
+         DirectInput.cpp
+         GfxStats.cpp
+     1>GfxStats.cpp(28): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(112) : see declaration of 'strcpy'
+     1>GfxStats.cpp(159): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356) : see declaration of 'sprintf'
          NormalMapMaterial.cpp
-     1>c1xx : fatal error C1083: Cannot open source file: 'NormalMapMaterial.cpp': No such file or directory
+         ReflectiveMaterial.cpp
+     1>ReflectiveMaterial.cpp(5): warning C4305: 'argument' : truncation from 'double' to 'FLOAT'
+     1>ReflectiveMaterial.cpp(6): warning C4305: 'argument' : truncation from 'double' to 'FLOAT'
+     1>ReflectiveMaterial.cpp(7): warning C4305: 'argument' : truncation from 'double' to 'FLOAT'
          SkeletonClass.cpp
-     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\3DClasses\BaseObject3D.h(17): fatal error C1083: Cannot open include file: '../NormalMapMaterial.h': No such file or directory
+     1>SkeletonClass.cpp(206): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>SkeletonClass.cpp(302): warning C4305: '+=' : truncation from 'double' to 'float'
+     1>SkeletonClass.cpp(306): warning C4305: '-=' : truncation from 'double' to 'float'
+     1>SkeletonClass.cpp(311): warning C4305: '+=' : truncation from 'double' to 'float'
+     1>SkeletonClass.cpp(315): warning C4305: '-=' : truncation from 'double' to 'float'
          Sky.cpp
-     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\3DClasses\BaseObject3D.h(17): fatal error C1083: Cannot open include file: '../NormalMapMaterial.h': No such file or directory
+         SkyMaterial.cpp
          Sphere.cpp
-     1>c:\users\james_000\documents\github\graphics2\skeletonproject\skeletonproject\3DClasses\BaseObject3D.h(17): fatal error C1083: Cannot open include file: '../NormalMapMaterial.h': No such file or directory
-     1>Done Building Project "C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\SkeletonProject.vcxproj" (Build target(s)) -- FAILED.
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\Release\SkeletonProject.exe" /INCREMENTAL /NOLOGO d3d9.lib d3dx9d.lib dxguid.lib DxErr.lib dinput8.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\Release\SkeletonProject.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\Release\SkeletonProject.lib" /MACHINE:X86 /SAFESEH Release\BaseObject3D.obj
+         Release\Vertex.obj
+         Release\BaseMaterial.obj
+         Release\Cone.obj
+         Release\Cylinder.obj
+         Release\d3dApp.obj
+         Release\DirectInput.obj
+         Release\GfxStats.obj
+         Release\NormalMapMaterial.obj
+         Release\ReflectiveMaterial.obj
+         Release\SkeletonClass.obj
+         Release\Sky.obj
+         Release\SkyMaterial.obj
+         Release\Sphere.obj
+     1>LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
+         Generating code
+         Finished generating code
+         SkeletonProject.vcxproj -> C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\Release\SkeletonProject.exe
+     1>Done Building Project "C:\Users\james_000\Documents\GitHub\Graphics2\SkeletonProject\SkeletonProject\SkeletonProject.vcxproj" (Build target(s)).
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:05.60
+Time Elapsed 00:00:08.23
