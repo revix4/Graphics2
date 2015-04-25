@@ -63,7 +63,7 @@ void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 
 	m_reflMat->setTexture(gd3dDevice, "marble.bmp");
 	m_reflMat->setEnvMap(gd3dDevice, "grassenvmap1024.dds");
-	D3DXCreateEffectFromFileA(gd3dDevice, "EnvMap.fx", 0, 0, 0, 0, &Phong, 0);
+	D3DXCreateEffectFromFileA(gd3dDevice, "EnvMapG2.fx", 0, 0, 0, 0, &Phong, 0);
 	m_reflMat->ConnectToEffect(Phong);
 	m_reflMat->buildFX();
 
